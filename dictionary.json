@@ -1,0 +1,127 @@
+{
+  "glossary": {
+    "glossary_EN": {
+      "title": "Gesture data sampling",
+      "welcomeMessage": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+      "goodbyeMessage": "Thanks for participating!"
+    },
+
+    "glossary_DE": {
+      "title": "Sammlung von Gestendaten",
+      "welcomeMessage": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+      "goodbyeMessage": "Danke fürs Mitmachen!"
+    }
+  },
+
+  "gestures": [
+    {
+      "name_EN": "Pushing the glasses up your nose",
+      "description_EN": "To perform this gesture you have to push the glasses up your nose with your index finger.",
+      "name_DE": "Die Brille hochschieben",
+      "description_DE": "Bei dieser Geste sollen Sie die Brille mit dem Zeigefinger Ihre Nase hochschieben.",
+      "sampleCount": 10,
+      "label": "PUSH_GLASSES_UP"
+    },
+    {
+      "name_EN": "Readjusting the glasses (right side)",
+      "description_EN": "To perform this gesture you have to take the glasses with your index finger and your thumb at the the top right corner of the frame and move them up and down slightly.",
+      "name_DE": "Die Brille zurechtrücken (rechte Seite)",
+      "description_DE": "Bei dieser Geste sollen Sie die Brille zwischen Ihrem Zeigefinger und Ihrem Daumen an der rechten oberen Ecke des Brillengestells fassen und zuerst ein wenig aufwärts und dann wieder ungefähr in die ursprüngliche Position bewegen.",
+      "sampleCount": 10,
+      "label": "READJUST_GLASSES_RIGHT"
+    },
+    {
+      "name_EN": "Readjusting the glasses (left side)",
+      "description_EN": "To perform this gesture you have to take the glasses with your index finger and your thumb at the the top left corner of the frame and move them up and down slightly.",
+      "name_DE": "Die Brille zurechtrücken (linke Seite)",
+      "description_DE": "Bei dieser Geste sollen Sie die Brille zwischen Ihrem Zeigefinger und Ihrem Daumen an der linken oberen Ecke des Brillengestells fassen und zuerst ein wenig aufwärts und dann wieder ungefähr in die ursprüngliche Position bewegen.",
+      "sampleCount": 10,
+      "label": "READJUST_GLASSES_LEFT"
+    },
+    {
+      "name_EN": "Slow nodding",
+      "description_EN": "To perform this gesture you have to nod slowly, as if you were agreeing with someone while still thinking about what they said.",
+      "name_DE": "Langsames Nicken",
+      "description_DE": "Bei dieser Geste sollen Sie langsam Nicken, so, als würden Sie jemandem zustimmen und derweil noch über seine Aussage nachdenken.",
+      "sampleCount": 10,
+      "label": "SLOW_NOD"
+    },
+    {
+      "name_EN": "Tilting your head sideways (right side)",
+      "description_EN": "To perform this gesture you have to slightly tilt your head to the right side like you would wondering what goes through someones head.",
+      "name_DE": "Kopf zur Seite neigen (rechte Seite)",
+      "description_DE": "Bei dieser Geste sollen Sie Ihren Kopf leicht nach rechts neigen, so, als würden Sie darüber nachdenken, was gerade durch jemandens Kopf gehen muss.",
+      "sampleCount": 10,
+      "label": "TILT_HEAD_RIGHT"
+    },
+    {
+      "name_EN": "Tilting your head sideways (left side)",
+      "description_EN": "To perform this gesture you have to slightly tilt your head to the left side like you would wondering what goes through someones head.",
+      "name_DE": "Kopf zur Seite neigen (linke Seite)",
+      "description_DE": "Bei dieser Geste sollen Sie Ihren Kopf leicht nach links neigen, so, als würden Sie darüber nachdenken, was gerade durch jemandens Kopf gehen muss.",
+      "sampleCount": 10,
+      "label": "TILT_HEAD_LEFT"
+    },
+    {
+      "name_EN": "Tapping your nose (right side)",
+      "description_EN": "To perform this gesture you have to tap on your right nasal wing once with your right index finger.",
+      "name_DE": "Nase antippen (rechte Seite)",
+      "description_DE": "Bei dieser Geste sollen Sie den rechten Nasenflügel mit ihrem rechten Zeigefinger einmal antippen.",
+      "sampleCount": 10,
+      "label": "TAP_NOSE_RIGHT"
+    },
+    {
+      "name_EN": "Tapping your nose (left side)",
+      "description_EN": "To perform this gesture you have to tap on your left nasal wing once with your left index finger.",
+      "name_DE": "Nase antippen (linke Seite)",
+      "description_DE": "Bei dieser Geste sollen Sie den linken Nasenflügel mit ihrem linken Zeigefinger einmal antippen.",
+      "sampleCount": 10,
+      "label": "TAP_NOSE_LEFT"
+    },
+    {
+      "name_EN": "Rubbing your nose",
+      "description_EN": "To perform this gesture you have to rub your nose with a your index finger.",
+      "name_DE": "Nase reiben",
+      "description_DE": "Bei dieser Geste sollen Sie Ihre Nase mit ihrem Zeigefinger reiben.",
+      "sampleCount": 10,
+      "label": "RUB_NOSE"
+    },
+    {
+      "name_EN": "Pushing your cheek up (right side)",
+      "description_EN": "To perform this gesture you have to push your right cheek up towards your cheek bone with your right index finger, as if you were thinking",
+      "name_DE": "Wange schieben (rechte Seite)",
+      "description_DE": "Bei dieser Geste sollen Sie Ihre rechte Wange mit Ihrem rechten Zeigefinger zu Ihrem rechten Wangenknochen hochschieben, so, als würden Sie nachdenken",
+      "sampleCount": 10,
+      "label": "PUSH_CHEEK_RIGHT"
+    },
+    {
+      "name_EN": "Pushing your cheek up (left side)",
+      "description_EN": "To perform this gesture you have to push your left cheek up towards your cheek bone with your left index finger, as if you were thinking",
+      "name_DE": "Wange schieben (linke Seite)",
+      "description_DE": "Bei dieser Geste sollen Sie Ihre linke Wange mit Ihrem linken Zeigefinger zu Ihrem linken Wangenknochen hochschieben, so, als würden Sie nachdenken",
+      "sampleCount": 10,
+      "label": "PUSH_CHEEK_LEFT"
+    },
+    {
+      "name_EN": "Tapping the glasses (right side)",
+      "description_EN": "To perform this gesture you have to tap the glasses three times on the right side.",
+      "name_DE": "Die Brille an der Seite antippen (rechte Seite)",
+      "description_DE": "Bei dieser Geste sollen Sie die Brille an der rechten Seite drei mal antippen.",
+      "sampleCount": 10,
+      "label": "TAP_GLASSES_RIGHT"
+    },
+    {
+      "name_EN": "Tapping the glasses (left side)",
+      "description_EN": "To perform this gesture you have to tap the glasses three times on the left side.",
+      "name_DE": "Die Brille an der Seite antippen (linke Seite)",
+      "description_DE": "Bei dieser Geste sollen Sie die Brille an der linken Seite drei mal antippen.",
+      "sampleCount": 10,
+      "label": "TAP_GLASSES_LEFT"
+    }
+  ],
+
+  "timestampSaveData": "D:\\timestamps",
+  "timeStampDataName": "timestamps",
+  "labeledDataSave": "D:\\LabeledData",
+  "labeledDataHeaderLength": 6
+}
