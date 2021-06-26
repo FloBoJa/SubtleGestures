@@ -1,7 +1,9 @@
+from tkinter import *
 from tkinter import messagebox
 from datetime import datetime
 from enum import Enum
 import os
+import sys
 import json
 import pickle
 import random
@@ -14,7 +16,6 @@ from tkvideo import tkvideo
 class Language(Enum):
     ENGLISH = "_EN"
     GERMAN = "_DE"
-
 
 def createStartPage():
     frame = Frame(root)
@@ -39,9 +40,9 @@ def createDescriptionWindow(language: Language):
     welcomeDescription.config(state=DISABLED)
     welcomeDescription.place(relx=0.5, rely=0.4, anchor=CENTER)
 
-    languageButtonGER = Button(frame, text="Weiter",
+    languageButton = Button(frame, text="Weiter",
                                command=lambda: (frame.destroy(), createGestureWindowFirst(language)))
-    languageButtonGER.place(relx=0.5, rely=0.8, anchor=CENTER)
+    languageButton.place(relx=0.5, rely=0.8, anchor=CENTER)
 
 
 def createGestureWindowFirst(language: Language):
@@ -83,29 +84,27 @@ def createGestureWindowIteration(language: Language, restOfGestures):
         player = tkvideo(path, lbl, loop=1)
         player.play()
 
-        languageButtonGER = Button(frame, text="Start",
-                                   command=lambda: createStopButton(language, languageButtonGER, frame, gesture,
+        languageButton = Button(frame, text="Start",
+                                   command=lambda: createStopButton(language, languageButton, frame, gesture,
                                                                     restOfGestures, gestureDescription, count,
                                                                     getCurrentTime(), lbl))
-        languageButtonGER.place(relx=0.8, rely=0.5, anchor=CENTER)
-
-
+        languageButton.place(relx=0.8, rely=0.5, anchor=CENTER)
+        languageButton.focus_set()
 
 
 def createStopButton(language: Language, button, frame, gesture, restOfGestures, gestureDescription, count, startTime, lbl):
     button.destroy()
     button = Button(frame, text="stop",
                     command=lambda: (addLabel(startTime, getCurrentTime(), gesture.get("label")), print(labelList),
-                                     prepareNextGestureWindowIteration(frame, restOfGestures, lbl)))
+                                     prepareNextGestureWindowIteration(language, frame, restOfGestures, lbl)))
     button.place(relx=0.8, rely=0.5, anchor=CENTER)
+    button.focus_set()
 
-
-def prepareNextGestureWindowIteration(frame, restOfGestures, lbl):
+def prepareNextGestureWindowIteration(language: Language, frame, restOfGestures, lbl):
     lbl.destroy()
     frame.pack_forget()
     frame.destroy()
     createGestureWindowIteration(language, restOfGestures)
-
 
 def createLastWindow(language: Language):
     frame = createFrame(language)
@@ -120,14 +119,12 @@ def createLastWindow(language: Language):
                                command=lambda: (saveLabelList(), sys.exit(0)))
     languageButton.place(relx=0.5, rely=0.8, anchor=CENTER)
 
-
 def saveLabelList():
     labeledData = json_data.get("timestampSaveData")
     timestampsName = json_data.get("timeStampDataName")
     savePath = labeledData + timestampsName + ".pkl"
     with open(savePath, 'wb') as output:
         pickle.dump(labelList, output, pickle.HIGHEST_PROTOCOL)
-
 
 
 def createFrame(language: Language):
@@ -138,7 +135,6 @@ def createFrame(language: Language):
 
     return frame
 
-
 def chooseLanguage(language: Language, chosenLanguage):
     chosenLanguage = language
 
@@ -146,15 +142,13 @@ def chooseLanguage(language: Language, chosenLanguage):
 def addLabel(startTime, endTime, label):
     labelList.append((startTime, endTime, label))
 
-
 def getCurrentTime():
     return datetime.utcnow()
-
 
 if __name__ == '__main__':
     language = Language.ENGLISH
 
-    with open("dictionary.json") as json_file:
+    with open("dictionary.json", "rb") as json_file:
         json_data = json.load(json_file)
 
     startTime = 0
