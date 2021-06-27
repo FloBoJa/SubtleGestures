@@ -87,22 +87,6 @@
       "label": "RUB_NOSE"
     },
     {
-      "name_EN": "Pushing your cheek up (right side)",
-      "description_EN": "To perform this gesture you have to push your right cheek up towards your cheek bone with your right index finger, as if you were thinking",
-      "name_DE": "Wange schieben (rechte Seite)",
-      "description_DE": "Bei dieser Geste sollen Sie Ihre rechte Wange mit Ihrem rechten Zeigefinger zu Ihrem rechten Wangenknochen hochschieben, so, als würden Sie nachdenken",
-      "sampleCount": 10,
-      "label": "PUSH_CHEEK_RIGHT"
-    },
-    {
-      "name_EN": "Pushing your cheek up (left side)",
-      "description_EN": "To perform this gesture you have to push your left cheek up towards your cheek bone with your left index finger, as if you were thinking",
-      "name_DE": "Wange schieben (linke Seite)",
-      "description_DE": "Bei dieser Geste sollen Sie Ihre linke Wange mit Ihrem linken Zeigefinger zu Ihrem linken Wangenknochen hochschieben, so, als würden Sie nachdenken",
-      "sampleCount": 10,
-      "label": "PUSH_CHEEK_LEFT"
-    },
-    {
       "name_EN": "Tapping the glasses (right side)",
       "description_EN": "To perform this gesture you have to tap the glasses three times on the right side.",
       "name_DE": "Die Brille an der Seite antippen (rechte Seite)",
