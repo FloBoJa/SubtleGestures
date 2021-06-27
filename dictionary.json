@@ -20,7 +20,8 @@
       "name_DE": "Die Brille hochschieben",
       "description_DE": "Bei dieser Geste sollen Sie die Brille mit dem Zeigefinger Ihre Nase hochschieben.",
       "sampleCount": 10,
-      "label": "PUSH_GLASSES_UP"
+      "label": "PUSH_GLASSES_UP",
+      "file": "adjust_glasses_front.mp4"
     },
     {
       "name_EN": "Readjusting the glasses (right side)",
@@ -28,7 +29,8 @@
       "name_DE": "Die Brille zurechtrücken (rechte Seite)",
       "description_DE": "Bei dieser Geste sollen Sie die Brille zwischen Ihrem Zeigefinger und Ihrem Daumen an der rechten oberen Ecke des Brillengestells fassen und zuerst ein wenig aufwärts und dann wieder ungefähr in die ursprüngliche Position bewegen.",
       "sampleCount": 10,
-      "label": "READJUST_GLASSES_RIGHT"
+      "label": "READJUST_GLASSES_RIGHT",
+      "file": "adjust_glasses_side.mp4"
     },
     {
       "name_EN": "Readjusting the glasses (left side)",
@@ -36,7 +38,8 @@
       "name_DE": "Die Brille zurechtrücken (linke Seite)",
       "description_DE": "Bei dieser Geste sollen Sie die Brille zwischen Ihrem Zeigefinger und Ihrem Daumen an der linken oberen Ecke des Brillengestells fassen und zuerst ein wenig aufwärts und dann wieder ungefähr in die ursprüngliche Position bewegen.",
       "sampleCount": 10,
-      "label": "READJUST_GLASSES_LEFT"
+      "label": "READJUST_GLASSES_LEFT",
+      "file": "adjust_glasses_side.mp4"
     },
     {
       "name_EN": "Slow nodding",
@@ -44,7 +47,8 @@
       "name_DE": "Langsames Nicken",
       "description_DE": "Bei dieser Geste sollen Sie langsam Nicken, so, als würden Sie jemandem zustimmen und derweil noch über seine Aussage nachdenken.",
       "sampleCount": 10,
-      "label": "SLOW_NOD"
+      "label": "SLOW_NOD",
+      "file": "slow_nod.mp4"
     },
     {
       "name_EN": "Tilting your head sideways (right side)",
@@ -52,7 +56,8 @@
       "name_DE": "Kopf zur Seite neigen (rechte Seite)",
       "description_DE": "Bei dieser Geste sollen Sie Ihren Kopf leicht nach rechts neigen, so, als würden Sie darüber nachdenken, was gerade durch jemandens Kopf gehen muss.",
       "sampleCount": 10,
-      "label": "TILT_HEAD_RIGHT"
+      "label": "TILT_HEAD_RIGHT",
+      "file": "tilt_head_sideways.mp4"
     },
     {
       "name_EN": "Tilting your head sideways (left side)",
@@ -60,7 +65,8 @@
       "name_DE": "Kopf zur Seite neigen (linke Seite)",
       "description_DE": "Bei dieser Geste sollen Sie Ihren Kopf leicht nach links neigen, so, als würden Sie darüber nachdenken, was gerade durch jemandens Kopf gehen muss.",
       "sampleCount": 10,
-      "label": "TILT_HEAD_LEFT"
+      "label": "TILT_HEAD_LEFT",
+      "file": "tilt_head_sideways.mp4"
     },
     {
       "name_EN": "Tapping your nose (right side)",
@@ -68,7 +74,8 @@
       "name_DE": "Nase antippen (rechte Seite)",
       "description_DE": "Bei dieser Geste sollen Sie den rechten Nasenflügel mit ihrem rechten Zeigefinger einmal antippen.",
       "sampleCount": 10,
-      "label": "TAP_NOSE_RIGHT"
+      "label": "TAP_NOSE_RIGHT",
+      "file": "tap_nose_sideways.mp4"
     },
     {
       "name_EN": "Tapping your nose (left side)",
@@ -76,7 +83,8 @@
       "name_DE": "Nase antippen (linke Seite)",
       "description_DE": "Bei dieser Geste sollen Sie den linken Nasenflügel mit ihrem linken Zeigefinger einmal antippen.",
       "sampleCount": 10,
-      "label": "TAP_NOSE_LEFT"
+      "label": "TAP_NOSE_LEFT",
+      "file": "tap_nose_sideways.mp4"
     },
     {
       "name_EN": "Rubbing your nose",
@@ -84,7 +92,8 @@
       "name_DE": "Nase reiben",
       "description_DE": "Bei dieser Geste sollen Sie Ihre Nase mit ihrem Zeigefinger reiben.",
       "sampleCount": 10,
-      "label": "RUB_NOSE"
+      "label": "RUB_NOSE",
+      "file": "rub_nose.mp4"
     },
     {
       "name_EN": "Tapping the glasses (right side)",
@@ -92,7 +101,8 @@
       "name_DE": "Die Brille an der Seite antippen (rechte Seite)",
       "description_DE": "Bei dieser Geste sollen Sie die Brille an der rechten Seite drei mal antippen.",
       "sampleCount": 10,
-      "label": "TAP_GLASSES_RIGHT"
+      "label": "TAP_GLASSES_RIGHT",
+      "file": "tap_glasses_side.mp4"
     },
     {
       "name_EN": "Tapping the glasses (left side)",
@@ -100,7 +110,8 @@
       "name_DE": "Die Brille an der Seite antippen (linke Seite)",
       "description_DE": "Bei dieser Geste sollen Sie die Brille an der linken Seite drei mal antippen.",
       "sampleCount": 10,
-      "label": "TAP_GLASSES_LEFT"
+      "label": "TAP_GLASSES_LEFT",
+      "file": "tap_glasses_side.mp4"
     }
   ],
 
