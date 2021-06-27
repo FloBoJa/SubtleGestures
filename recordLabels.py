@@ -1,5 +1,6 @@
 from tkinter import *
 from tkinter import messagebox
+from tkvideo import tkvideo
 from datetime import datetime
 from enum import Enum
 import os
@@ -8,9 +9,6 @@ import json
 import pickle
 import random
 import sys
-
-from tkinter import *
-from tkvideo import tkvideo
 
 
 class Language(Enum):
