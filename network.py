@@ -14,8 +14,7 @@ import torch.nn as nn
 dictionary = {"TILT_HEAD_LEFT.csv": 0, "TILT_HEAD_RIGHT.csv": 1, "TAP_GLASSES_LEFT.csv": 2,
               "TAP_GLASSES_RIGHT.csv": 3, "SLOW_NOD.csv": 4, "PUSH_GLASSES_UP.csv": 5,
               "READJUST_GLASSES_LEFT.csv": 6, "READJUST_GLASSES_RIGHT.csv": 7,
-              "TAP_NOSE_LEFT.csv": 8, "TAP_NOSE_RIGHT.csv": 9, "RUB_NOSE.csv": 10, "PUSH_CHEEK_LEFT.csv": 11,
-              "PUSH_CHEEK_RIGHT.csv": 12}
+              "TAP_NOSE_LEFT.csv": 8, "TAP_NOSE_RIGHT.csv": 9, "RUB_NOSE.csv": 10}
 
 
 class GestureDataset(Dataset):
@@ -24,9 +23,10 @@ class GestureDataset(Dataset):
         self.gestures = []
         self.labels = []
 
-        for file in os.listdir(csv_files):
-            self.gestures.append(pd.read_csv(os.path.join(csv_files, file)))
-            self.labels.append(file)
+        for root, dirs, files in os.walk(csv_files):
+            for file in files:
+                self.gestures.append(pd.read_csv(os.path.join(root, file)))
+                self.labels.append(file)
 
     def __len__(self):
         return len(self.labels)
@@ -78,14 +78,14 @@ def updateGestureData(gestureData, dataSocket, maxGestureLength, csvPath):
 if __name__ == '__main__':
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
-    train = False
+    train = True
     live = False
-    gestureDataSet = GestureDataset(csv_files='./drive/MyDrive/LabeledData')
+    gestureDataSet = GestureDataset(csv_files='/content/drive/MyDrive/labeledData')
     hidden_nodes = 128
 
     train_loader = DataLoader(gestureDataSet, 1, shuffle=True)
 
-    model = Net(11, hidden_nodes, 13)
+    model = Net(11, hidden_nodes, 11)
     if os.path.exists("./model"):
         print("Loading existing model")
         model.load_state_dict(torch.load("./model"))
