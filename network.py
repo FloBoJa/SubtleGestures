@@ -1,4 +1,6 @@
 from __future__ import print_function, division
+
+import json
 import os
 import time
 from datetime import datetime
@@ -78,9 +80,12 @@ def updateGestureData(gestureData, dataSocket, maxGestureLength, csvPath):
 if __name__ == '__main__':
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
+    with open("dictionary.json", "rb") as json_file:
+        json_data = json.load(json_file)
+
     train = True
     live = False
-    gestureDataSet = GestureDataset(csv_files='/content/drive/MyDrive/labeledData')
+    gestureDataSet = GestureDataset(csv_files=json_data.get('labeledDataSave'))
     hidden_nodes = 128
 
     train_loader = DataLoader(gestureDataSet, 1, shuffle=True)
@@ -95,9 +100,9 @@ if __name__ == '__main__':
         loss_function = nn.NLLLoss()
         optimizer = optim.Adam(model.parameters(), lr=0.0001)
 
-        #for epoch in range(750):
         epoch = -1
-        while True:
+        desiredEpochs = 750  # change this to desired epoch
+        while epoch < desiredEpochs:
             epoch += 1
             lossEnd = 0
             h = torch.randn(1, 1, hidden_nodes)
