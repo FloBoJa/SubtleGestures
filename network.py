@@ -134,7 +134,7 @@ if __name__ == '__main__':
 
     train = True
     live = False
-    gestureDataSet = GestureDataset(csv_files='/home/thomas/Dokumente/GestureData')
+    gestureDataSet = GestureDataset(csv_files=json_data.get('labeledDataSave'))
     validation_split = .2
     shuffle_dataset = True
     random_seed = 120
