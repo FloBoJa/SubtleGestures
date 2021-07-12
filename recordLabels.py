@@ -81,6 +81,8 @@ def createGestureWindowIteration(language: Language, restOfGestures):
         path = './mp4s/' + gesture.get("file")
         player = tkvideo(path, lbl, loop=1)
         player.play()
+        # Edit the 'load' function in tkvideo.py by adding 'time.sleep(0.06)'
+        # inside the while loop to fix the speed of the videos
 
         languageButton = Button(frame, text="Start",
                                    command=lambda: createStopButton(language, languageButton, frame, gesture,
