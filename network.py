@@ -161,7 +161,7 @@ if __name__ == '__main__':
 
     validation_loader = DataLoader(gestureDataSet, batch_size=1, sampler=valid_sampler)
 
-    model = Net(11, hidden_nodes, 10)
+    model = Net(11, hidden_nodes, 11)
 
     if os.path.exists("./model"):
         print("Loading existing model")
@@ -238,9 +238,9 @@ if __name__ == '__main__':
             y_pred.extend([maximum.cpu()])
             y_true.extend([dictionary[tag[0]]])
 
-        print(correct)
-        print(incorrect)
-        print(correct / (correct + incorrect))
+        print("correct: " + str(correct))
+        print("incorrect: " + str(incorrect))
+        print("F1-score: " + str(correct / (correct + incorrect)))
 
         cf_matrix = confusion_matrix(y_true, y_pred)
         df_cm = pd.DataFrame(cf_matrix / np.sum(cf_matrix) * 10, index=[i for i in dictionary.keys()],
