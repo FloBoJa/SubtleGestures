@@ -12,6 +12,7 @@ import torch
 import pandas as pd
 import numpy as np
 from torch import optim
+from torch.nn.utils.rnn import pack_padded_sequence, pad_packed_sequence, pack_sequence
 from torch.utils.data import Dataset, DataLoader
 import torch.nn as nn
 from sklearn.metrics import confusion_matrix
@@ -27,13 +28,24 @@ def myCollate(batch):
     target = [item[1] for item in batch]
     max_length = max(lengths)
     padded_X = torch.zeros((len(batch), max_length, 11))
+    padded_Y = torch.zeros((len(batch), 1))
 
     for i, x_len in enumerate(lengths):
         sequence = torch.tensor(batch[i][0])
         padded_X[i, 0:x_len] = sequence[:x_len]
 
+    for i, y_len in enumerate(target):
+        padded_Y[i, 0] = dictionary[batch[i][1]]
 
-    return [padded_X, target]
+
+    return [padded_X, target, lengths]
+
+def myCollate2(batch):
+    tensors = [torch.tensor(item[0], dtype=torch.float) for item in batch]
+    target = [item[1] for item in batch]
+
+    return [tensors, target]
+
 
 
 class GestureDataset(Dataset):
@@ -53,20 +65,44 @@ class GestureDataset(Dataset):
     def __getitem__(self, item):
         return np.array(self.gestures[item]), ''.join([i for i in self.labels[item] if not i.isdigit()])
 
+def last_timestep(self, unpacked, lengths):
+    # Index of the last output for each sequence.
+    idx = (lengths - 1).view(-1, 1).expand(unpacked.size(0),
+                                           unpacked.size(2)).unsqueeze(1)
+    return unpacked.gather(1, idx).squeeze()
+
 class Net(nn.Module):
     def __init__(self, input_dim, hidden_dim, tagset_size):
         super().__init__()
-        self.lstm = nn.LSTM(input_dim, hidden_dim, num_layers=2, batch_first=True, dropout=0.2)
 
-        self.hidden2tag = nn.Linear(hidden_dim, tagset_size)
+        self.relu = nn.ReLU()
+        self.hidden_size = hidden_dim
+        self.lstm = nn.LSTM(input_dim, hidden_dim, num_layers=2, batch_first=True)
+
+        self.dropout = nn.Dropout(0.5)
+        self.lstm2hidden = nn.Linear(hidden_dim, 512)
+        self.hidden2hidden = nn.Linear(512,256)
+        self.hidden2hidden2 = nn.Linear(256,256)
+        self.hidden2tag = nn.Linear(256, tagset_size)
 
         self.m = nn.LogSoftmax(dim=1)
 
-    def forward(self, data_vector, h, c):
-        lstm_out, (h1, c1) = self.lstm(data_vector.float(), (h, c))
-        tag_space = self.hidden2tag(lstm_out[:, -1, :])
-        tag_scores = self.m(tag_space)
-        return tag_scores, (h1, c1)
+    def forward(self, data, h2, c2):
+        packed_input = pack_sequence(data, enforce_sorted=False).to(device)
+        lstm_out, (h1, c1) = self.lstm(packed_input)
+        seq_unpacked, lens_unpacked = pad_packed_sequence(lstm_out, batch_first=True)
+        x = self.lstm2hidden(h1[-1])
+        x = self.relu(x)
+        #x = self.dropout(x)
+        x = self.hidden2hidden(x)
+        x = self.relu(x)
+        #x = self.dropout(x)
+        x = self.hidden2hidden2(x)
+        x = self.relu(x)
+        #x = self.dropout(x)
+        tag_space = self.hidden2tag(x)
+        tags = self.m(tag_space)
+        return tags, (h1, c1)
 
 def updateGestureData(gestureData, dataSocket, maxGestureLength, csvPath):
     referenceTime = datetime.utcnow()
@@ -106,25 +142,49 @@ def validate():
     c = torch.zeros(2, 1, hidden_nodes).to(device)
 
     for data_vector, tag in validation_loader:
-        sentence_in = torch.tensor(data_vector, dtype=torch.long).to(device)
-        targets = torch.tensor([dictionary[tag[0]]]).to(device)
 
-        tag_scores, _ = model(sentence_in, h, c)
+        tag_scores, _ = model(data_vector, h, c)
 
-        maximum = torch.argmax(tag_scores)
+        tag_scores = tag_scores.tolist()
 
-        if (tag_scores[0][dictionary[tag[0]]] == tag_scores[0][maximum]):
-            correct += 1
-        else:
-            incorrect += 1
+        for x in range(len(tag_scores)):
+            maximum = max(tag_scores[x])
+            if (tag_scores[x][dictionary[tag[x]]] == maximum):
+                correct += 1
+            else:
+                incorrect += 1
 
-        y_pred.extend([maximum.cpu()])
-        y_true.extend([dictionary[tag[0]]])
 
     print(correct)
     print(incorrect)
     print(correct / (correct + incorrect))
+
+    correct = 0
+    incorrect = 0
+
+    h = torch.zeros(2, 60, hidden_nodes).to(device)
+    c = torch.zeros(2, 60, hidden_nodes).to(device)
+
+    for data_vector, tag in train_loader:
+
+        tag_scores, _ = model(data_vector, h, c)
+
+        tag_scores = tag_scores.tolist()
+
+        for x in range(len(tag_scores)):
+            maximum = max(tag_scores[x])
+            if (tag_scores[x][dictionary[tag[x]]] == maximum):
+                correct += 1
+            else:
+                incorrect += 1
+
+    print(correct)
+    print(incorrect)
+    print(correct / (correct + incorrect))
+
     model.train()
+
+
 
 if __name__ == '__main__':
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -137,7 +197,7 @@ if __name__ == '__main__':
     gestureDataSet = GestureDataset(csv_files=json_data.get('labeledDataSave'))
     validation_split = .2
     shuffle_dataset = True
-    random_seed = 120
+    random_seed = 10
 
     # Creating data indices for training and validation splits:
     dataset_size = len(gestureDataSet)
@@ -155,11 +215,12 @@ if __name__ == '__main__':
     minLoss = torch.tensor(2000)
 
 
-    hidden_nodes = 256
+    hidden_nodes = 1024
 
-    train_loader = DataLoader(gestureDataSet, batch_size=1, sampler=train_sampler)
+    train_loader = DataLoader(gestureDataSet, batch_size=128, sampler=train_sampler, collate_fn=myCollate2, drop_last=True)
 
-    validation_loader = DataLoader(gestureDataSet, batch_size=1, sampler=valid_sampler)
+    validation_loader = DataLoader(gestureDataSet, batch_size=1, sampler=valid_sampler, collate_fn=myCollate2)
+
 
     model = Net(11, hidden_nodes, 11)
 
@@ -170,7 +231,7 @@ if __name__ == '__main__':
 
     if train:
         loss_function = nn.NLLLoss()
-        optimizer = optim.Adam(model.parameters(), lr=0.00000000001)
+        optimizer = optim.Adam(model.parameters(), lr=0.0001)
         #scheduler = optim.lr_scheduler.ReduceLROnPlateau(optimizer, 'min')
 
         epoch = -1
@@ -178,16 +239,14 @@ if __name__ == '__main__':
         while epoch < desiredEpochs:
             epoch += 1
             lossEnd = 0
-            h = torch.randn(2, 1, hidden_nodes)
-            c = torch.randn(2, 1, hidden_nodes)
+            h = torch.randn(2, 60, hidden_nodes)
+            c = torch.randn(2, 60, hidden_nodes)
             h = h.to(device)
             c = c.to(device)
             for data_vector, tag in train_loader:
                 model.zero_grad()
 
-                sentence_in = torch.tensor(data_vector, dtype=torch.long).to(device)
-
-                tag_scores, (hn, cn) = model(sentence_in, h, c)
+                tag_scores, (hn, cn) = model(data_vector, h, c)
                 targets = [dictionary[target] for target in tag]
 
                 loss = loss_function(tag_scores, torch.tensor(targets).to(device))
@@ -218,29 +277,31 @@ if __name__ == '__main__':
 
         y_pred = []
         y_true = []
-        
+
         h = torch.zeros(2, 1, hidden_nodes).to(device)
         c = torch.zeros(2, 1, hidden_nodes).to(device)
-        
-        for data_vector, tag in train_loader:
-            sentence_in = torch.tensor(data_vector, dtype=torch.long).to(device)
-            targets = torch.tensor([dictionary[tag[0]]]).to(device)
 
-            tag_scores, _ = model(sentence_in, h, c)
+        for data_vector, tag in validation_loader:
 
-            maximum = torch.argmax(tag_scores)
+            tag_scores, _ = model(data_vector, h, c)
 
-            if (tag_scores[0][dictionary[tag[0]]] == tag_scores[0][maximum]):
-                correct += 1
-            else:
-                incorrect += 1
+            tag_scores = tag_scores.tolist()
 
-            y_pred.extend([maximum.cpu()])
+            for x in range(len(tag_scores)):
+                maximum = np.argmax(tag_scores[x])
+                if (tag_scores[x][dictionary[tag[x]]] == tag_scores[x][maximum]):
+                    correct += 1
+                else:
+                    incorrect += 1
+
+
+            y_pred.extend([maximum])
             y_true.extend([dictionary[tag[0]]])
 
         print("correct: " + str(correct))
         print("incorrect: " + str(incorrect))
         print("F1-score: " + str(correct / (correct + incorrect)))
+
 
         cf_matrix = confusion_matrix(y_true, y_pred)
         df_cm = pd.DataFrame(cf_matrix / np.sum(cf_matrix) * 10, index=[i for i in dictionary.keys()],
