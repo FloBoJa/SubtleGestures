@@ -17,11 +17,15 @@ from torch.utils.data import Dataset, DataLoader
 import torch.nn as nn
 from sklearn.metrics import confusion_matrix
 import matplotlib.pyplot as plt
+from tkinter import *
+from threading import Thread
 
 dictionary = {"TILT_HEAD_LEFT.csv": 0, "TILT_HEAD_RIGHT.csv": 1, "TAP_GLASSES_LEFT.csv": 2,
               "TAP_GLASSES_RIGHT.csv": 3, "SLOW_NOD.csv": 4, "PUSH_GLASSES_UP.csv": 5,
               "READJUST_GLASSES_LEFT.csv": 6, "READJUST_GLASSES_RIGHT.csv": 7,
               "TAP_NOSE_LEFT.csv": 8, "TAP_NOSE_RIGHT.csv": 9, "RUB_NOSE.csv": 10}
+    
+tag_scores = []
 
 def myCollate(batch):
     lengths = [item[0].shape[0] for item in batch]
@@ -70,6 +74,105 @@ def last_timestep(self, unpacked, lengths):
     idx = (lengths - 1).view(-1, 1).expand(unpacked.size(0),
                                            unpacked.size(2)).unsqueeze(1)
     return unpacked.gather(1, idx).squeeze()
+
+def createStartPage():
+    frame = Frame(root)
+    frame.pack(fill=BOTH, expand=True)
+
+    label = Label(frame, text="""Enter the IP address and the port that are configured in the J!NS MEME Data Logger.
+    The Data Logger must be in its measurement mode.""")
+    label.place(relx=0.5, rely=0.2, anchor=CENTER)
+    ipBox = Text(
+        frame,
+        height=12,
+        width=40
+    )
+    ipBox.insert('end', "192.168.178.10")
+    ipBox.place(relx=0.5, rely=0.4, anchor=E)
+    portBox = Text(
+        frame,
+        height=12,
+        width=40
+    )
+    portBox.insert('end', "60000")
+    portBox.place(relx=0.5, rely=0.4, anchor=W)
+    submitButton = Button(
+        frame,
+        text = "Connect",
+        command = lambda: (submitButton.config(state='disabled'),
+            startReceiving((ipBox.get('1.0', 'end').strip(),
+                int(portBox.get('1.0', 'end').strip())),
+                lambda: (frame.destroy()),
+                lambda: (submitButton.config(state='normal')
+                )
+            )
+        )
+    )
+    submitButton.place(relx=0.5, rely=0.7, anchor=CENTER)
+    submitButton.focus_set()
+
+def startReceiving(dataSource, onConnection, onFailure):
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    try:
+        s.connect(dataSource)
+    except Exception:
+        onFailure()
+        return
+    onConnection()
+
+    frame = Frame(root)
+    frame.pack(fill=BOTH, expand=True)
+
+    label = Label(frame, text="""Press the button right after you performed a gesture.
+    The button can be pressed repeatedly. You can also press space bar.""")
+    label.place(relx=0.5, rely=0.2, anchor=CENTER)
+
+    classifyButton = Button(
+        frame,
+        text = "Classify last gesture",
+        command = lambda: (
+            label.config(text = getMaxTag())
+        )
+    )
+    classifyButton.place(relx=0.5, rely=0.4, anchor=CENTER)
+    classifyButton.focus_set()
+
+    label = Label(frame, text="")
+    label.place(relx=0.5, rely=0.5, anchor=CENTER)
+
+    clientThread = Thread(target = receivingLoop, args = (s, ))
+    clientThread.daemon = True
+    clientThread.start()
+
+def getMaxTag():
+    maximum = float('-inf')
+    for x in range(len(tag_scores)):
+        maximum = max(maximum, max(tag_scores[x]))
+    for x in range(len(tag_scores)):
+        for key in dictionary:
+            if tag_scores[x][dictionary[key]] == maximum:
+                return key
+
+
+def receivingLoop(s):
+    global tag_scores
+    dataFile = "./liveGestureData.csv"
+    maxGestureLength = 3 # seconds
+    updateFrequency = 0.2 # seconds
+
+    while True:
+        updateGestureData(gestureData, s, maxGestureLength, dataFile)
+        
+        h = torch.zeros(2, 1, hidden_nodes).to(device)
+        c = torch.zeros(2, 1, hidden_nodes).to(device)
+        
+        sentence_in = [torch.tensor(np.array(pd.read_csv(dataFile)), dtype=torch.float).to(device)]
+        
+        tag_scores, _ = model(sentence_in, h, c)
+        
+        time.sleep(1/updateFrequency)
+
+    s.close()
 
 class Net(nn.Module):
     def __init__(self, input_dim, hidden_dim, tagset_size):
@@ -312,27 +415,12 @@ if __name__ == '__main__':
 
     else: # live gesture recognition
         gestureData = [[]]
-        # this address must be the same as in the Data Logger
-        dataSource = ("192.168.178.1", 60000)
-        dataFile = "./liveGestureData.csv"
-        maxGestureLength = 10 # seconds
-        updateFrequency = 1 # seconds
 
-        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        s.connect(dataSource)
+        root = Tk()
+        root.geometry("1280x720")
+        root.title("")
+        root.resizable(False, False)
 
-        while True:
-            updateGestureData(gestureData, s, maxGestureLength, dataFile)
-            
-            h = torch.zeros(1, 1, hidden_nodes).to(device)
-            c = torch.zeros(1, 1, hidden_nodes).to(device)
-            
-            sentence_in = torch.tensor([np.array(pd.read_csv(dataFile))], dtype=torch.long).to(device)
-            
-            tag_scores, _ = model(sentence_in, h, c)
-            print(tag_scores)
-                
-            time.sleep(1/updateFrequency)
+        createStartPage()
 
-        s.close()
-
+        root.mainloop()
