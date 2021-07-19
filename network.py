@@ -11,7 +11,7 @@ import seaborn as sn
 import torch
 import pandas as pd
 import numpy as np
-from torch import optim
+from torch import optim, functional
 from torch.nn.utils.rnn import pack_padded_sequence, pad_packed_sequence, pack_sequence
 from torch.utils.data import Dataset, DataLoader
 import torch.nn as nn
@@ -24,9 +24,10 @@ dictionary = {"TILT_HEAD_LEFT.csv": 0, "TILT_HEAD_RIGHT.csv": 1, "TAP_GLASSES_LE
               "TAP_GLASSES_RIGHT.csv": 3, "SLOW_NOD.csv": 4, "PUSH_GLASSES_UP.csv": 5,
               "READJUST_GLASSES_LEFT.csv": 6, "READJUST_GLASSES_RIGHT.csv": 7,
               "TAP_NOSE_LEFT.csv": 8, "TAP_NOSE_RIGHT.csv": 9, "RUB_NOSE.csv": 10}
-    
+
 gesture_start = datetime.min
 tag_scores = []
+
 
 def myCollate(batch):
     lengths = [item[0].shape[0] for item in batch]
@@ -42,15 +43,14 @@ def myCollate(batch):
     for i, y_len in enumerate(target):
         padded_Y[i, 0] = dictionary[batch[i][1]]
 
-
     return [padded_X, target, lengths]
+
 
 def myCollate2(batch):
     tensors = [torch.tensor(item[0], dtype=torch.float) for item in batch]
     target = [item[1] for item in batch]
 
     return [tensors, target]
-
 
 
 class GestureDataset(Dataset):
@@ -70,11 +70,13 @@ class GestureDataset(Dataset):
     def __getitem__(self, item):
         return np.array(self.gestures[item]), ''.join([i for i in self.labels[item] if not i.isdigit()])
 
+
 def last_timestep(self, unpacked, lengths):
     # Index of the last output for each sequence.
     idx = (lengths - 1).view(-1, 1).expand(unpacked.size(0),
                                            unpacked.size(2)).unsqueeze(1)
     return unpacked.gather(1, idx).squeeze()
+
 
 def createStartPage():
     frame = Frame(root)
@@ -99,18 +101,19 @@ def createStartPage():
     portBox.place(relx=0.5, rely=0.4, anchor=W)
     submitButton = Button(
         frame,
-        text = "Connect",
-        command = lambda: (submitButton.config(state='disabled'),
-            startReceiving((ipBox.get('1.0', 'end').strip(),
-                int(portBox.get('1.0', 'end').strip())),
-                lambda: (frame.destroy()),
-                lambda: (submitButton.config(state='normal')
-                )
-            )
-        )
+        text="Connect",
+        command=lambda: (submitButton.config(state='disabled'),
+                         startReceiving((ipBox.get('1.0', 'end').strip(),
+                                         int(portBox.get('1.0', 'end').strip())),
+                                        lambda: (frame.destroy()),
+                                        lambda: (submitButton.config(state='normal')
+                                                 )
+                                        )
+                         )
     )
     submitButton.place(relx=0.5, rely=0.7, anchor=CENTER)
     submitButton.focus_set()
+
 
 def startReceiving(dataSource, onConnection, onFailure):
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -133,8 +136,8 @@ def startReceiving(dataSource, onConnection, onFailure):
 
     gestureButton = Button(
         frame,
-        text = startRecordingText,
-        command = lambda: recordingButtonPressed(gestureButton, label, startRecordingText, stopRecordingText)
+        text=startRecordingText,
+        command=lambda: recordingButtonPressed(gestureButton, label, startRecordingText, stopRecordingText, frame)
     )
     gestureButton.place(relx=0.5, rely=0.4, anchor=CENTER)
     gestureButton.focus_set()
@@ -142,22 +145,96 @@ def startReceiving(dataSource, onConnection, onFailure):
     label = Label(frame, text="")
     label.place(relx=0.5, rely=0.5, anchor=CENTER)
 
-    clientThread = Thread(target = receivingLoop, args = (s, ))
+    clientThread = Thread(target=receivingLoop, args=(s,))
     clientThread.daemon = True
     clientThread.start()
 
-def recordingButtonPressed(gestureButton, label, startRecordingText, stopRecordingText):
-    global gesture_start
-    if gesture_start == datetime.min:
-        gesture_start = datetime.utcnow()
-        gestureButton.config(text = stopRecordingText)
-        label.config(text = "")
-    else:
-        gesture_start = datetime.min
-        gestureButton.config(text = startRecordingText)
-        label.config(text = getMaxTag())
 
-def getMaxTag():
+def recordingButtonPressed(gestureButton, label, startRecordingText, stopRecordingText, frame):
+    global gesture_start
+
+    gestureButton.destroy()
+
+    gesture_start = datetime.utcnow()
+
+    endRecordingButton = Button(
+        frame,
+        text=stopRecordingText,
+        command=lambda: endRecordingButtonPressed(endRecordingButton, label, startRecordingText, stopRecordingText,
+                                                  frame)
+    )
+
+    endRecordingButton.place(relx=0.5, rely=0.4, anchor=CENTER)
+    endRecordingButton.focus_set()
+
+
+def endRecordingButtonPressed(endRecordingButton, label, startRecordingText, stopRecordingText, frame):
+    global gesture_end
+
+    endRecordingButton.destroy()
+
+    gesture_end = datetime.utcnow()
+
+    startRecordingButton = Button(
+        frame,
+        text=startRecordingText,
+        command=lambda: recordingButtonPressed(endRecordingButton, label, startRecordingText, stopRecordingText, frame)
+    )
+
+    startRecordingButton.place(relx=0.5, rely=0.4, anchor=CENTER)
+    startRecordingButton.focus_set()
+
+    tag_scores = classify(gesture_start, gesture_end)
+
+    tag = getMaxTag(tag_scores)
+
+    label.destroy()
+    label = Label(frame, text=tag)
+    label.place(relx=0.5, rely=0.5, anchor=CENTER)
+
+
+def classify(startTime, endTime):
+    dataFile = "./liveGestureData.csv"
+    tmpFile = "./liveClassifyData.csv"
+
+    time.sleep(1 / 0.2)
+
+    with open(dataFile, 'r') as loggerFile:
+        loggerContent = loggerFile.readlines()
+
+    classificationFile = open(tmpFile, 'w')
+
+    relevantLines = ""
+
+    for x in loggerContent:
+        splitLine = x.split(",")
+
+        if len(splitLine) < 3:
+            continue
+
+        timestamp = datetime.strptime(splitLine[2], '%Y.%m.%d %H:%M:%S.%f')
+        if startTime <= timestamp:
+            if timestamp <= endTime:
+                relevantLines += ','.join(splitLine[3:]) + "\n"
+            else:
+                break
+
+    classificationFile.write(relevantLines)
+    classificationFile.close()
+
+    sentence_in = [torch.tensor(np.array(pd.read_csv(tmpFile)), dtype=torch.float).to(device)]
+
+    h = torch.zeros(2, 1, hidden_nodes).to(device)
+    c = torch.zeros(2, 1, hidden_nodes).to(device)
+
+    tag_scores, _ = model(sentence_in, h, c)
+
+    os.remove(tmpFile)
+
+    return tag_scores
+
+
+def getMaxTag(tag_scores):
     maximum = float('-inf')
     for x in range(len(tag_scores)):
         maximum = max(maximum, max(tag_scores[x]))
@@ -168,21 +245,13 @@ def getMaxTag():
 
 
 def receivingLoop(s):
-    global tag_scores
     dataFile = "./liveGestureData.csv"
-    updateFrequency = 0.2 # seconds
+    updateFrequency = 0.2  # seconds
 
     while True:
         updateGestureData(gestureData, s, dataFile)
-        
-        h = torch.zeros(2, 1, hidden_nodes).to(device)
-        c = torch.zeros(2, 1, hidden_nodes).to(device)
-        
-        sentence_in = [torch.tensor(np.array(pd.read_csv(dataFile)), dtype=torch.float).to(device)]
-        
-        tag_scores, _ = model(sentence_in, h, c)
-        
-        time.sleep(1/updateFrequency)
+
+        time.sleep(1 / updateFrequency)
 
     s.close()
 
@@ -222,6 +291,7 @@ class Net(nn.Module):
 def updateGestureData(gestureData, dataSocket, csvPath):
     referenceTime = datetime.utcnow()
     # remove old data
+    '''
     newGestureData = []
     for i in range(len(gestureData[0])):
         splitLine = gestureData[0][i].split(",")
@@ -229,10 +299,10 @@ def updateGestureData(gestureData, dataSocket, csvPath):
             newGestureData = gestureData[0][i:]
             break
     gestureData[0] = newGestureData
-
+    '''
     receivedData = ""
     while True:
-        receivedData += dataSocket.recv(1024).decode("utf-8") 
+        receivedData += dataSocket.recv(1024).decode("utf-8")
         if receivedData.count("\n") >= 3:
             lastCompleteLine = receivedData.split("\n")[-2]
             newestTime = datetime.strptime(lastCompleteLine.split(",")[2], '%Y.%m.%d %H:%M:%S.%f')
@@ -240,10 +310,10 @@ def updateGestureData(gestureData, dataSocket, csvPath):
             if newestTime > referenceTime:
                 break
     gestureData[0] += receivedData.split("\n")[1:-2]
-    
+
     with open(csvPath, 'w') as file:
         for line in gestureData[0]:
-            file.write(",".join(line.split(",")[3:]) + "\n")
+            file.write(",".join(line.split(",")) + "\n")
 
 def validate():
     model.eval()
@@ -307,8 +377,8 @@ if __name__ == '__main__':
     with open("dictionary.json", "rb") as json_file:
         json_data = json.load(json_file)
 
-    train = True
-    live = False
+    train = False
+    live = True
     gestureDataSet = GestureDataset(csv_files=json_data.get('labeledDataSave'))
     validation_split = .2
     shuffle_dataset = True
@@ -330,7 +400,7 @@ if __name__ == '__main__':
     minLoss = torch.tensor(2000)
 
 
-    hidden_nodes = 1024
+    hidden_nodes = 512
 
     train_loader = DataLoader(gestureDataSet, batch_size=128, sampler=train_sampler, collate_fn=myCollate2, drop_last=True)
 
@@ -426,6 +496,7 @@ if __name__ == '__main__':
         plt.savefig('output.png')
 
     else: # live gesture recognition
+        model.eval()
         gestureData = [[]]
 
         root = Tk()
