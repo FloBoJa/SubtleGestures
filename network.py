@@ -25,6 +25,7 @@ dictionary = {"TILT_HEAD_LEFT.csv": 0, "TILT_HEAD_RIGHT.csv": 1, "TAP_GLASSES_LE
               "READJUST_GLASSES_LEFT.csv": 6, "READJUST_GLASSES_RIGHT.csv": 7,
               "TAP_NOSE_LEFT.csv": 8, "TAP_NOSE_RIGHT.csv": 9, "RUB_NOSE.csv": 10}
     
+gesture_start = datetime.min
 tag_scores = []
 
 def myCollate(batch):
@@ -123,19 +124,20 @@ def startReceiving(dataSource, onConnection, onFailure):
     frame = Frame(root)
     frame.pack(fill=BOTH, expand=True)
 
-    label = Label(frame, text="""Press the button right after you performed a gesture.
-    The button can be pressed repeatedly. You can also press space bar.""")
+    label = Label(frame, text="""Press the button right before and after you performed a gesture.
+    This can be done repeatedly. You can also press space bar instead of pressing the button.""")
     label.place(relx=0.5, rely=0.2, anchor=CENTER)
 
-    classifyButton = Button(
+    startRecordingText = "Start recording gesture"
+    stopRecordingText = "Stop recording and classify"
+
+    gestureButton = Button(
         frame,
-        text = "Classify last gesture",
-        command = lambda: (
-            label.config(text = getMaxTag())
-        )
+        text = startRecordingText,
+        command = lambda: recordingButtonPressed(gestureButton, label, startRecordingText, stopRecordingText)
     )
-    classifyButton.place(relx=0.5, rely=0.4, anchor=CENTER)
-    classifyButton.focus_set()
+    gestureButton.place(relx=0.5, rely=0.4, anchor=CENTER)
+    gestureButton.focus_set()
 
     label = Label(frame, text="")
     label.place(relx=0.5, rely=0.5, anchor=CENTER)
@@ -143,6 +145,17 @@ def startReceiving(dataSource, onConnection, onFailure):
     clientThread = Thread(target = receivingLoop, args = (s, ))
     clientThread.daemon = True
     clientThread.start()
+
+def recordingButtonPressed(gestureButton, label, startRecordingText, stopRecordingText):
+    global gesture_start
+    if gesture_start == datetime.min:
+        gesture_start = datetime.utcnow()
+        gestureButton.config(text = stopRecordingText)
+        label.config(text = "")
+    else:
+        gesture_start = datetime.min
+        gestureButton.config(text = startRecordingText)
+        label.config(text = getMaxTag())
 
 def getMaxTag():
     maximum = float('-inf')
@@ -157,11 +170,10 @@ def getMaxTag():
 def receivingLoop(s):
     global tag_scores
     dataFile = "./liveGestureData.csv"
-    maxGestureLength = 3 # seconds
     updateFrequency = 0.2 # seconds
 
     while True:
-        updateGestureData(gestureData, s, maxGestureLength, dataFile)
+        updateGestureData(gestureData, s, dataFile)
         
         h = torch.zeros(2, 1, hidden_nodes).to(device)
         c = torch.zeros(2, 1, hidden_nodes).to(device)
@@ -207,14 +219,13 @@ class Net(nn.Module):
         tags = self.m(tag_space)
         return tags, (h1, c1)
 
-def updateGestureData(gestureData, dataSocket, maxGestureLength, csvPath):
+def updateGestureData(gestureData, dataSocket, csvPath):
     referenceTime = datetime.utcnow()
     # remove old data
     newGestureData = []
-    minTimestamp = referenceTime - dttimedelta(seconds=maxGestureLength)
     for i in range(len(gestureData[0])):
         splitLine = gestureData[0][i].split(",")
-        if datetime.strptime(splitLine[2], '%Y.%m.%d %H:%M:%S.%f') >= minTimestamp:
+        if datetime.strptime(splitLine[2], '%Y.%m.%d %H:%M:%S.%f') >= gesture_start:
             newGestureData = gestureData[0][i:]
             break
     gestureData[0] = newGestureData
@@ -225,6 +236,7 @@ def updateGestureData(gestureData, dataSocket, maxGestureLength, csvPath):
         if receivedData.count("\n") >= 3:
             lastCompleteLine = receivedData.split("\n")[-2]
             newestTime = datetime.strptime(lastCompleteLine.split(",")[2], '%Y.%m.%d %H:%M:%S.%f')
+            # receive until the received data has caught up
             if newestTime > referenceTime:
                 break
     gestureData[0] += receivedData.split("\n")[1:-2]
