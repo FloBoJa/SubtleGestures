@@ -1,0 +1,9 @@
+correct: 147
+incorrect: 29
+Accuracy:0.8352272727272727
+F1-score: [1.         1.         0.74285714 0.82352941 0.89795918 0.76666667
+ 0.64705882 0.76923077]
+ 
+ dictionary = {"TILT_HEAD_LEFT.csv": 0, "TILT_HEAD_RIGHT.csv": 1, "TAP_GLASSES_LEFT.csv": 2,
+              "TAP_GLASSES_RIGHT.csv": 3, "SLOW_NOD.csv": 4, "PUSH_GLASSES_UP.csv": 5,
+              "READJUST_GLASSES_LEFT.csv": 6, "READJUST_GLASSES_RIGHT.csv": 7}
