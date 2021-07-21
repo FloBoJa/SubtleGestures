@@ -31,6 +31,8 @@ def train_test_split(data, labels,  n_test):
 
 if __name__ == '__main__':
 
+    RANDOM_SEED = 10
+
     with open("dictionary.json", "rb") as json_file:
         json_data = json.load(json_file)
 
@@ -82,17 +84,17 @@ if __name__ == '__main__':
     for x in range(1, len(padded_gesturesTest)):
         test = np.append(test, padded_gesturesTest[x].reshape(1, padded_gesturesTest[x].shape[0]), axis=0)
 
-    randomForest = RandomForestClassifier(n_estimators=1000)
+    randomForest = RandomForestClassifier(n_estimators=1000, random_state=RANDOM_SEED)
 
-    decisionTree = DecisionTreeClassifier()
+    decisionTree = DecisionTreeClassifier(random_state=RANDOM_SEED)
 
     neighbors = KNeighborsClassifier(n_neighbors=12)
 
-    svmClassifier = svm.SVC(kernel='linear')
+    svmClassifier = svm.SVC(kernel='linear', random_state=RANDOM_SEED)
 
     gaussian = GaussianNB()
 
-    gaussianMixture = GaussianMixture()
+    gaussianMixture = GaussianMixture(random_state=RANDOM_SEED)
 
     randomForest.fit(train, labels)
 
