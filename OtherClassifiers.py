@@ -1,18 +1,19 @@
 # transform a time series dataset into a supervised learning dataset
 import os
 import json
+import random
 
 import numpy
 import numpy as np
 import pandas as pd
-from matplotlib import pyplot
+from matplotlib import pyplot, pyplot as plt
 from numpy import asarray
 from pandas import DataFrame, concat
 
 # fit an random forest model and make a one step prediction
 from sklearn import metrics, __all__, svm
 from sklearn.ensemble import RandomForestRegressor, RandomForestClassifier
-from sklearn.metrics import mean_absolute_error
+from sklearn.metrics import mean_absolute_error, plot_confusion_matrix
 from sklearn.mixture import GaussianMixture
 from sklearn.naive_bayes import GaussianNB
 from sklearn.neighbors import KNeighborsClassifier
@@ -34,18 +35,31 @@ if __name__ == '__main__':
         json_data = json.load(json_file)
 
     gestures = []
-    labels = np.empty((0,))
+    gesturesTest = []
 
-    for root, dirs, files in os.walk(json_data.get('labeledDataSave')):
+    labels = np.empty((0,))
+    labelsTest = np.empty((0,))
+
+    for root, dirs, files in os.walk(json_data.get('labeledDataTrainSave')):
+        random.Random(10).shuffle(files)
         for file in files:
             gestures.append(pd.read_csv(os.path.join(root, file)).values)
             labels = np.append(labels, dictionary[''.join([i for i in file if not i.isdigit()])])
 
+    for root, dirs, files in os.walk(json_data.get('labeledDataTestSave')):
+        random.Random(10).shuffle(files)
+        for file in files:
+            gesturesTest.append(pd.read_csv(os.path.join(root, file)).values)
+            labelsTest = np.append(labelsTest, dictionary[''.join([i for i in file if not i.isdigit()])])
+
     gestures = [item.flatten() for item in gestures]
+    gesturesTest = [item.flatten() for item in gesturesTest]
 
     maxLength = max(gestures, key=lambda array: array.shape[0]).shape[0]
+    maxLengthTest = max(gesturesTest, key=lambda array: array.shape[0]).shape[0]
 
     padded_gestures = []
+    padded_gesturesTest = []
 
     for item in gestures:
         if item.shape[0] < maxLength:
@@ -53,15 +67,26 @@ if __name__ == '__main__':
         else:
             padded_gestures.append(item)
 
-    padded = np.reshape(padded_gestures[0], (1, padded_gestures[0].shape[0]))
+    for item in gesturesTest:
+        if item.shape[0] < maxLength:
+            padded_gesturesTest.append(np.append(item, [0 * x for x in range(maxLength - item.shape[0])]))
+        else:
+            padded_gesturesTest.append(item)
+
+    train = np.reshape(padded_gestures[0], (1, padded_gestures[0].shape[0]))
+    test = np.reshape(padded_gesturesTest[0], (1, padded_gesturesTest[0].shape[0]))
+
     for x in range(1, len(padded_gestures)):
-        padded = np.append(padded, padded_gestures[x].reshape(1, padded_gestures[x].shape[0]), axis=0)
+        train = np.append(train, padded_gestures[x].reshape(1, padded_gestures[x].shape[0]), axis=0)
+
+    for x in range(1, len(padded_gesturesTest)):
+        test = np.append(test, padded_gesturesTest[x].reshape(1, padded_gesturesTest[x].shape[0]), axis=0)
 
     randomForest = RandomForestClassifier(n_estimators=1000)
 
     decisionTree = DecisionTreeClassifier()
 
-    neighbors = KNeighborsClassifier(n_neighbors=3)
+    neighbors = KNeighborsClassifier(n_neighbors=12)
 
     svmClassifier = svm.SVC(kernel='linear')
 
@@ -69,19 +94,17 @@ if __name__ == '__main__':
 
     gaussianMixture = GaussianMixture()
 
-    train, train_labels, test, test_labels = train_test_split(padded, labels, 132)
+    randomForest.fit(train, labels)
 
-    randomForest.fit(train, train_labels)
+    decisionTree.fit(train, labels)
 
-    decisionTree.fit(train, train_labels)
+    gaussian.fit(train, labels)
 
-    gaussian.fit(train, train_labels)
+    gaussianMixture.fit(train, labels)
 
-    gaussianMixture.fit(train, train_labels)
+    neighbors.fit(train, labels)
 
-    neighbors.fit(train, train_labels)
-
-    svmClassifier.fit(train, train_labels)
+    svmClassifier.fit(train, labels)
 
     pred = randomForest.predict(test)
     predNeighbors = neighbors.predict(test)
@@ -91,25 +114,46 @@ if __name__ == '__main__':
     predDecisionTree = decisionTree.predict(test)
 
     print("Random Forest:")
-    print("Accuracy:", metrics.accuracy_score(test_labels, pred))
-    print("F1-score:", metrics.f1_score(test_labels, pred,average=None))
+    print("Accuracy:", metrics.accuracy_score(labelsTest, pred))
+    print("F1-score:", metrics.f1_score(labelsTest, pred,average=None))
+
+    plt.figure(figsize=(250, 250))
+    plot_confusion_matrix(randomForest, test, labelsTest, normalize="true")
+    plt.savefig("RandomForest_All_Gestures.png")
     print("")
     print("K-Nearest-Neighbors:")
-    print("Accuracy:", metrics.accuracy_score(test_labels, predNeighbors))
-    print("F1-score:", metrics.f1_score(test_labels, predNeighbors, average=None))
+    print("Accuracy:", metrics.accuracy_score(labelsTest, predNeighbors))
+    print("F1-score:", metrics.f1_score(labelsTest, predNeighbors, average=None))
+
+    plot_confusion_matrix(neighbors, test, labelsTest, normalize="true")
+    plt.savefig("K-Nearest-Neighbors_All_Gestures.png")
     print("")
     print("Naive Bayes:")
-    print("Accuracy:", metrics.accuracy_score(test_labels, predGaussian))
-    print("F1-score:", metrics.f1_score(test_labels, predGaussian, average=None))
+    print("Accuracy:", metrics.accuracy_score(labelsTest, predGaussian))
+    print("F1-score:", metrics.f1_score(labelsTest, predGaussian, average=None))
+
+    plot_confusion_matrix(gaussian, test, labelsTest, normalize="true")
+    plt.savefig("Naive_Bayes_All_Gestures.png")
     print("")
     print("GaussianMixture:")
-    print("Accuracy:", metrics.accuracy_score(test_labels, predGaussianMixture))
-    print("F1-score:", metrics.f1_score(test_labels, predGaussianMixture, average=None))
+    print("Accuracy:", metrics.accuracy_score(labelsTest, predGaussianMixture))
+    print("F1-score:", metrics.f1_score(labelsTest, predGaussianMixture, average=None))
+
+    #plot_confusion_matrix(gaussianMixture, test, labelsTest)
+    #plt.savefig("Gaussian_Mixture_All_Gestures.png")
+
     print("")
     print("Support Vector Machine:")
-    print("Accuracy:", metrics.accuracy_score(test_labels, predSVM))
-    print("F1-score:", metrics.f1_score(test_labels, predSVM, average=None))
+    print("Accuracy:", metrics.accuracy_score(labelsTest, predSVM))
+    print("F1-score:", metrics.f1_score(labelsTest, predSVM, average=None))
+
+    plot_confusion_matrix(svmClassifier, test, labelsTest, normalize="true")
+    plt.savefig("Support_Vector_Machine_All_Gestures.png")
+
     print("")
     print("Decision Tree:")
-    print("Accuracy:", metrics.accuracy_score(test_labels, predDecisionTree))
-    print("F1-score:", metrics.f1_score(test_labels, predDecisionTree, average=None))
+    print("Accuracy:", metrics.accuracy_score(labelsTest, predDecisionTree))
+    print("F1-score:", metrics.f1_score(labelsTest, predDecisionTree, average=None))
+
+    plot_confusion_matrix(decisionTree, test, labelsTest, normalize="true")
+    plt.savefig("Decision_Tree_All_Gestures.png")

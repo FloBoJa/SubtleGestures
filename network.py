@@ -8,6 +8,7 @@ from datetime import timedelta as dttimedelta
 import socket
 
 import seaborn as sn
+import sklearn
 import torch
 import pandas as pd
 import numpy as np
@@ -19,6 +20,7 @@ from sklearn.metrics import confusion_matrix
 import matplotlib.pyplot as plt
 from tkinter import *
 from threading import Thread
+from torch.nn import functional
 
 dictionary = {"TILT_HEAD_LEFT.csv": 0, "TILT_HEAD_RIGHT.csv": 1, "TAP_GLASSES_LEFT.csv": 2,
               "TAP_GLASSES_RIGHT.csv": 3, "SLOW_NOD.csv": 4, "PUSH_GLASSES_UP.csv": 5,
@@ -259,31 +261,32 @@ class Net(nn.Module):
     def __init__(self, input_dim, hidden_dim, tagset_size):
         super().__init__()
 
-        self.relu = nn.ReLU()
+        self.relu = nn.ELU()
         self.hidden_size = hidden_dim
-        self.lstm = nn.LSTM(input_dim, hidden_dim, num_layers=2, batch_first=True)
+        self.lstm = nn.LSTM(input_dim, hidden_dim, num_layers=2, batch_first=True, dropout=0.5)
 
-        self.dropout = nn.Dropout(0.5)
-        self.lstm2hidden = nn.Linear(hidden_dim, 512)
-        self.hidden2hidden = nn.Linear(512,256)
-        self.hidden2hidden2 = nn.Linear(256,256)
-        self.hidden2tag = nn.Linear(256, tagset_size)
-
+        self.dropout = nn.Dropout(0.25)
+        self.lstm2hidden = nn.Linear(hidden_dim, 128)
+        self.hidden2hidden = nn.Linear(128,64)
+        self.hidden2hidden2 = nn.Linear(64,64)
+        self.hidden2tag = nn.Linear(64, tagset_size)
+        self.ln_norm = nn.LayerNorm([hidden_dim])
         self.m = nn.LogSoftmax(dim=1)
 
     def forward(self, data, h2, c2):
         packed_input = pack_sequence(data, enforce_sorted=False).to(device)
         lstm_out, (h1, c1) = self.lstm(packed_input)
         seq_unpacked, lens_unpacked = pad_packed_sequence(lstm_out, batch_first=True)
-        x = self.lstm2hidden(h1[-1])
+        x = self.ln_norm(h1[-1])
+        x = self.lstm2hidden(x)
         x = self.relu(x)
-        #x = self.dropout(x)
+        x = self.dropout(x)
         x = self.hidden2hidden(x)
         x = self.relu(x)
-        #x = self.dropout(x)
+        x = self.dropout(x)
         x = self.hidden2hidden2(x)
         x = self.relu(x)
-        #x = self.dropout(x)
+        x = self.dropout(x)
         tag_space = self.hidden2tag(x)
         tags = self.m(tag_space)
         return tags, (h1, c1)
@@ -323,8 +326,8 @@ def validate():
     y_pred = []
     y_true = []
 
-    h = torch.zeros(2, 1, hidden_nodes).to(device)
-    c = torch.zeros(2, 1, hidden_nodes).to(device)
+    h = torch.zeros(5, 1, hidden_nodes).to(device)
+    c = torch.zeros(5, 1, hidden_nodes).to(device)
 
     for data_vector, tag in validation_loader:
 
@@ -333,22 +336,28 @@ def validate():
         tag_scores = tag_scores.tolist()
 
         for x in range(len(tag_scores)):
-            maximum = max(tag_scores[x])
-            if (tag_scores[x][dictionary[tag[x]]] == maximum):
+            maximum = np.argmax(tag_scores[x])
+            if (tag_scores[x][dictionary[tag[x]]] == tag_scores[x][maximum]):
                 correct += 1
             else:
                 incorrect += 1
 
+        y_pred.extend([maximum])
+        y_true.extend([dictionary[tag[0]]])
 
     print(correct)
     print(incorrect)
-    print(correct / (correct + incorrect))
+    print("Accuracy:" + str(correct / (correct + incorrect)))
+    print("F1-score: " + str(sklearn.metrics.f1_score(y_true, y_pred, average=None)))
 
     correct = 0
     incorrect = 0
 
-    h = torch.zeros(2, 60, hidden_nodes).to(device)
-    c = torch.zeros(2, 60, hidden_nodes).to(device)
+    y_pred = []
+    y_true = []
+
+    h = torch.zeros(5, 60, hidden_nodes).to(device)
+    c = torch.zeros(5, 60, hidden_nodes).to(device)
 
     for data_vector, tag in train_loader:
 
@@ -357,15 +366,19 @@ def validate():
         tag_scores = tag_scores.tolist()
 
         for x in range(len(tag_scores)):
-            maximum = max(tag_scores[x])
-            if (tag_scores[x][dictionary[tag[x]]] == maximum):
+            maximum = np.argmax(tag_scores[x])
+            if (tag_scores[x][dictionary[tag[x]]] == tag_scores[x][maximum]):
                 correct += 1
             else:
                 incorrect += 1
 
+        y_pred.extend([maximum])
+        y_true.extend([dictionary[tag[0]]])
+
     print(correct)
     print(incorrect)
-    print(correct / (correct + incorrect))
+    print("Accuracy:" + str(correct / (correct + incorrect)))
+    print("F1-score: " + str(sklearn.metrics.f1_score(y_true, y_pred, average=None)))
 
     model.train()
 
@@ -378,8 +391,12 @@ if __name__ == '__main__':
         json_data = json.load(json_file)
 
     train = False
-    live = True
-    gestureDataSet = GestureDataset(csv_files=json_data.get('labeledDataSave'))
+    live = False
+    gestureDataSet = GestureDataset(csv_files=json_data.get('labeledDataTrainSave'))
+    validationSet = GestureDataset(csv_files=json_data.get('labeledDataValidateSave'))
+
+    testSet = GestureDataset(csv_files=json_data.get('labeledDataTestSave'))
+
     validation_split = .2
     shuffle_dataset = True
     random_seed = 10
@@ -389,6 +406,7 @@ if __name__ == '__main__':
     indices = list(range(dataset_size))
     split = int(np.floor(validation_split * dataset_size))
     if shuffle_dataset:
+        np.random.seed(random_seed)
         np.random.seed(random_seed)
         np.random.shuffle(indices)
     train_indices, val_indices = indices[split:], indices[:split]
@@ -402,9 +420,9 @@ if __name__ == '__main__':
 
     hidden_nodes = 512
 
-    train_loader = DataLoader(gestureDataSet, batch_size=128, sampler=train_sampler, collate_fn=myCollate2, drop_last=True)
-
-    validation_loader = DataLoader(gestureDataSet, batch_size=1, sampler=valid_sampler, collate_fn=myCollate2)
+    train_loader = DataLoader(gestureDataSet, batch_size=64, collate_fn=myCollate2, drop_last=True)
+    validation_loader = DataLoader(validationSet, batch_size=1, collate_fn=myCollate2)
+    testLoader = DataLoader(testSet, batch_size=1, collate_fn=myCollate2)
 
 
     model = Net(11, hidden_nodes, 11)
@@ -466,7 +484,7 @@ if __name__ == '__main__':
         h = torch.zeros(2, 1, hidden_nodes).to(device)
         c = torch.zeros(2, 1, hidden_nodes).to(device)
 
-        for data_vector, tag in validation_loader:
+        for data_vector, tag in testLoader:
 
             tag_scores, _ = model(data_vector, h, c)
 
@@ -485,16 +503,21 @@ if __name__ == '__main__':
 
         print("correct: " + str(correct))
         print("incorrect: " + str(incorrect))
-        print("F1-score: " + str(correct / (correct + incorrect)))
+        print("Accuracy:" + str(correct / (incorrect + correct)))
+        print("F1-score: " + str(sklearn.metrics.f1_score(y_true, y_pred, average=None)))
+        print("F1-score: " + str(sklearn.metrics.f1_score(y_true, y_pred, average="micro")))
+        print("F1-score: " + str(sklearn.metrics.f1_score(y_true, y_pred, average="macro")))
+        print("F1-score: " + str(sklearn.metrics.f1_score(y_true, y_pred, average="weighted")))
 
 
         cf_matrix = confusion_matrix(y_true, y_pred)
-        df_cm = pd.DataFrame(cf_matrix / np.sum(cf_matrix) * 10, index=[i for i in dictionary.keys()],
+        cf_matrix_n = cf_matrix.astype("float")
+        cf_matrix_n.sum(axis=1)[:, np.newaxis]
+        df_cm = pd.DataFrame(cf_matrix, index=[i for i in dictionary.keys()],
                              columns=[i for i in dictionary.keys()])
         plt.figure(figsize=(25, 25))
         sn.heatmap(df_cm, annot=True)
         plt.savefig('output.png')
-
     else: # live gesture recognition
         model.eval()
         gestureData = [[]]

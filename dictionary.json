@@ -117,6 +117,9 @@
 
   "timestampSaveData": "D:\\timestamps",
   "timeStampDataName": "timestamps",
-  "labeledDataSave": "D:\\LabeledData",
+  "labeledDataSave": "/home/thomas/Dokumente/SubtleGestures/SubtleGestureSeminar/labeledData",
+  "labeledDataTrainSave": "/home/thomas/Dokumente/SubtleGestures/SubtleGestureSeminar/train",
+  "labeledDataTestSave": "/home/thomas/Dokumente/SubtleGestures/SubtleGestureSeminar/test",
+  "labeledDataValidateSave": "/home/thomas/Dokumente/SubtleGestures/SubtleGestureSeminar/validate",
   "labeledDataHeaderLength": 6
 }
