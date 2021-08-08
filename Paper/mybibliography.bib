@@ -42,6 +42,514 @@ keywords = {wearable computer, face gesture, subtle interaction, smart eyeglasse
 location = {Maui, Hawaii},
 series = {ISWC '17}
 }
+@inbook{10.1145/1753326.1753394,
+author = {Harrison, Chris and Tan, Desney and Morris, Dan},
+title = {Skinput: Appropriating the Body as an Input Surface},
+year = {2010},
+isbn = {9781605589299},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/1753326.1753394},
+abstract = {We present Skinput, a technology that appropriates the human body for acoustic transmission,
+allowing the skin to be used as an input surface. In particular, we resolve the location
+of finger taps on the arm and hand by analyzing mechanical vibrations that propagate
+through the body. We collect these signals using a novel array of sensors worn as
+an armband. This approach provides an always available, naturally portable, and on-body
+finger input system. We assess the capabilities, accuracy and limitations of our technique
+through a two-part, twenty-participant user study. To further illustrate the utility
+of our approach, we conclude with several proof-of-concept applications we developed.},
+booktitle = {Proceedings of the SIGCHI Conference on Human Factors in Computing Systems},
+pages = {453–462},
+numpages = {10}
+}
+@inbook{10.1145/2858036.2858466,
+author = {Wen, Hongyi and Ramos Rojas, Julian and Dey, Anind K.},
+title = {Serendipity: Finger Gesture Recognition Using an Off-the-Shelf Smartwatch},
+year = {2016},
+isbn = {9781450333627},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/2858036.2858466},
+abstract = {Previous work on muscle activity sensing has leveraged specialized sensors such as
+electromyography and force sensitive resistors. While these sensors show great potential
+for detecting finger/hand gestures, they require additional hardware that adds to
+the cost and user discomfort. Past research has utilized sensors on commercial devices,
+focusing on recognizing gross hand gestures. In this work we present Serendipity,
+a new technique for recognizing unremarkable and fine-motor finger gestures using
+integrated motion sensors (accelerometer and gyroscope) in off-the-shelf smartwatches.
+Our system demonstrates the potential to distinguish 5 fine-motor gestures like pinching,
+tapping and rubbing fingers with an average f1-score of 87%. Our work is the first
+to explore the feasibility of using solely motion sensors on everyday wearable devices
+to detect fine-grained gestures. This promising technology can be deployed today on
+current smartwatches and has the potential to be applied to cross-device interactions,
+or as a tool for research in fields involving finger and hand motion.},
+booktitle = {Proceedings of the 2016 CHI Conference on Human Factors in Computing Systems},
+pages = {3847–3851},
+numpages = {5}
+}
+@inproceedings{10.1145/2984511.2984582,
+author = {Laput, Gierad and Xiao, Robert and Harrison, Chris},
+title = {ViBand: High-Fidelity Bio-Acoustic Sensing Using Commodity Smartwatch Accelerometers},
+year = {2016},
+isbn = {9781450341899},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/2984511.2984582},
+doi = {10.1145/2984511.2984582},
+abstract = {Smartwatches and wearables are unique in that they reside on the body, presenting
+great potential for always-available input and interaction. Their position on the
+wrist makes them ideal for capturing bio-acoustic signals. We developed a custom smartwatch
+kernel that boosts the sampling rate of a smartwatch's existing accelerometer to 4
+kHz. Using this new source of high-fidelity data, we uncovered a wide range of applications.
+For example, we can use bio-acoustic data to classify hand gestures such as flicks,
+claps, scratches, and taps, which combine with on-device motion tracking to create
+a wide range of expressive input modalities. Bio-acoustic sensing can also detect
+the vibrations of grasped mechanical or motor-powered objects, enabling passive object
+recognition that can augment everyday experiences with context-aware functionality.
+Finally, we can generate structured vibrations using a transducer, and show that data
+can be transmitted through the human body. Overall, our contributions unlock user
+interface techniques that previously relied on special-purpose and/or cumbersome instrumentation,
+making such interactions considerably more feasible for inclusion in future consumer
+devices.},
+booktitle = {Proceedings of the 29th Annual Symposium on User Interface Software and Technology},
+pages = {321–333},
+numpages = {13},
+keywords = {object detection, gestures, vibro-tags, wearables},
+location = {Tokyo, Japan},
+series = {UIST '16}
+}
+@inbook{10.1145/1125451.1125655,
+author = {Manabe, Hiroyuki and Fukumoto, Masaaki},
+title = {Full-Time Wearable Headphone-Type Gaze Detector},
+year = {2006},
+isbn = {1595932984},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/1125451.1125655},
+abstract = {A headphone-type gaze detector for a full-time wearable interface is proposed. It
+uses a Kalman filter to analyze multiple channels of EOG signals measured at the locations
+of headphone cushions to estimate gaze direction. Evaluations show that the average
+estimation error is 4.4® (horizontal) and 8.3® (vertical), and that the drift is suppressed
+to the same level as in ordinary EOG. The method is especially robust against signal
+anomalies. Selecting a real object from among many surrounding ones is one possible
+application of this headphone gaze detector.},
+booktitle = {CHI '06 Extended Abstracts on Human Factors in Computing Systems},
+pages = {1073–1078},
+numpages = {6}
+}
+@inproceedings{10.1145/3311823.3311831,
+author = {Li, Richard and Wu, Jason and Starner, Thad},
+title = {TongueBoard: An Oral Interface for Subtle Input},
+year = {2019},
+isbn = {9781450365475},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/3311823.3311831},
+doi = {10.1145/3311823.3311831},
+abstract = {We present TongueBoard, a retainer form-factor device for recognizing non-vocalized
+speech. TongueBoard enables absolute position tracking of the tongue by placing capacitive
+touch sensors on the roof of the mouth. We collect a dataset of 21 common words from
+four user study participants (two native American English speakers and two non-native
+speakers with severe hearing loss). We train a classifier that is able to recognize
+the words with 91.01% accuracy for the native speakers and 77.76% accuracy for the
+non-native speakers in a user dependent, offline setting. The native English speakers
+then participate in a user study involving operating a calculator application with
+15 non-vocalized words and two tongue gestures at a desktop and with a mobile phone
+while walking. TongueBoard consistently maintains an information transfer rate of
+3.78 bits per decision (number of choices = 17, accuracy = 97.1%) and 2.18 bits per
+second across stationary and mobile contexts, which is comparable to our control conditions
+of mouse (desktop) and touchpad (mobile) input.},
+booktitle = {Proceedings of the 10th Augmented Human International Conference 2019},
+articleno = {1},
+numpages = {9},
+keywords = {input interaction, oral sensing, wearable devices, silent speech interface, subtle gestures},
+location = {Reims, France},
+series = {AH2019}
+}
+@article{10.1145/3130902,
+author = {Bedri, Abdelkareem and Li, Richard and Haynes, Malcolm and Kosaraju, Raj Prateek and Grover, Ishaan and Prioleau, Temiloluwa and Beh, Min Yan and Goel, Mayank and Starner, Thad and Abowd, Gregory},
+title = {EarBit: Using Wearable Sensors to Detect Eating Episodes in Unconstrained Environments},
+year = {2017},
+issue_date = {September 2017},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+volume = {1},
+number = {3},
+url = {https://doi.org/10.1145/3130902},
+doi = {10.1145/3130902},
+abstract = {Chronic and widespread diseases such as obesity, diabetes, and hypercholesterolemia
+require patients to monitor their food intake, and food journaling is currently the
+most common method for doing so. However, food journaling is subject to self-bias
+and recall errors, and is poorly adhered to by patients. In this paper, we propose
+an alternative by introducing EarBit, a wearable system that detects eating moments.
+We evaluate the performance of inertial, optical, and acoustic sensing modalities
+and focus on inertial sensing, by virtue of its recognition and usability performance.
+Using data collected in a simulated home setting with minimum restrictions on participants’
+behavior, we build our models and evaluate them with an unconstrained outside-the-lab
+study. For both studies, we obtained video footage as ground truth for participants
+activities. Using leave-one-user-out validation, EarBit recognized all the eating
+episodes in the semi-controlled lab study, and achieved an accuracy of 90.1% and an
+F1-score of 90.9% in detecting chewing instances. In the unconstrained, outside-the-lab
+evaluation, EarBit obtained an accuracy of 93% and an F1-score of 80.1% in detecting
+chewing instances. It also accurately recognized all but one recorded eating episodes.
+These episodes ranged from a 2 minute snack to a 30 minute meal.},
+journal = {Proc. ACM Interact. Mob. Wearable Ubiquitous Technol.},
+month = sep,
+articleno = {37},
+numpages = {20},
+keywords = {Wearable computing, chewing detection, activity recognition, earables, automatic dietary monitoring, unconstraint environment}
+}
+@inproceedings{10.1145/3174910.3174938,
+author = {Ohnishi, Ayumi and Terada, Tsutomu and Tsukamoto, Masahiko},
+title = {A Motion Recognition Method Using Foot Pressure Sensors},
+year = {2018},
+isbn = {9781450354158},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/3174910.3174938},
+doi = {10.1145/3174910.3174938},
+abstract = {This paper proposes a method for recognizing postures and gestures using foot pressure
+sensors, and we investigate optimal positions for pressure sensors on soles are the
+best for motion recognition. In experiments, the recognition accuracies of 22 kinds
+of daily postures and gestures were evaluated from foot-pressure sensor values. Furthermore,
+the optimum measurement points for high recognition accuracy were examined by evaluating
+combinations of two foot pressure measurement areas on a round-robin basis. As a result,
+when selecting the optimum two points for a user, the recognition accuracy was about
+93.6% on average. Although individual differences were seen, the best combinations
+of areas for each subject were largely divided into two major patterns. When two points
+were chosen, combinations of the near thenar, which is located near the thumb ball,
+and near the heel or point of the outside of the middle of the foot were highly recognized.
+Of the best two points, one was commonly the near thenar for subjects. By taking three
+points of data and covering these two combinations, it will be possible to cope with
+individual differences. The recognition accuracy of the averaged combinations of the
+best two combinations for all subjects was classified with an accuracy of about 91.0%
+on average. On the basis of these results, two types of pressure sensing shoes were
+developed.},
+booktitle = {Proceedings of the 9th Augmented Human International Conference},
+articleno = {10},
+numpages = {8},
+keywords = {Foot Pressure, Shoes device, Gesture recognition, Posture recognition, Insole, Pressure sensor},
+location = {Seoul, Republic of Korea},
+series = {AH '18}
+}
+@inproceedings{10.1145/2641248.2641359,
+author = {Ike, Tsukasa and Nakasu, Toshiaki and Yamauchi, Yasunobu},
+title = {Contents-Aware Gesture Interaction Using Wearable Motion Sensor},
+year = {2014},
+isbn = {9781450330480},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/2641248.2641359},
+doi = {10.1145/2641248.2641359},
+abstract = {Gesture interaction has become a major role as intuitive control of remote devices.
+Motion-based hand gesture recognition using a wearable motion sensor equipped on the
+wrist-band helps decreasing recognition errors compared with that of video-based recognition
+systems. However, the user interaction is often interrupted even in the low-error
+conditions because an inappropriate gesture recognition mode is applied on the system
+or user can't find out how to handle it using gestures. We propose a novel gesture
+interaction technique using visual attention to suggest user an appropriate gesture
+on the condition of selectable contents on the screen. We applied this interaction
+method on the content navigation interface for the TV and found it essential to realize
+natural and intuitive gesture interactions.},
+booktitle = {Proceedings of the 2014 ACM International Symposium on Wearable Computers: Adjunct Program},
+pages = {5–8},
+numpages = {4},
+keywords = {visual attention, gesture interaction, wearable sensor},
+location = {Seattle, Washington},
+series = {ISWC '14 Adjunct}
+}
+@inproceedings{10.1145/2753509.2753512,
+author = {Milosevic, Bojan and Farella, Elisabetta},
+title = {Wearable Inertial Sensor for Jump Performance Analysis},
+year = {2015},
+isbn = {9781450335003},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/2753509.2753512},
+doi = {10.1145/2753509.2753512},
+abstract = {Wearable devices enable the unobtrusive sensing of a wide range of human activities
+and the development of innovative applications. While the consumer market is pushing
+them particularly as activity or heart rate trackers, their adoption in healthcare
+is still restricted to few cases, primarily due to their limited accuracy and reliability.
+An interesting field of application is the jump performance assessment. It is frequently
+used by therapists to estimate neuromuscular imbalances, since it helps to monitor
+training progress in athletes or injured patients. Measurements are typically captured
+with accurate but expensive instrumentation (e.g. force plates). In this work, we
+propose the use of a versatile low-cost wearable device equipped with inertial sensors
+for the evaluation of jump height, which can be easily employed at home. We consider
+two categories of jumps, the counter-movement jump (a single vertical jump) and the
+plyometric jump (the fast repetition of 4 jumps). The proposed approach, after an
+initialization phase, uses gyroscope data to continuously track the orientation of
+the device and align it with the vertical plane and the accelerometer data to estimate
+the jump trajectory. To validate the system, we collected 200 jumps performed with
+our device and the Myotest and we observed a mean difference of 0.7 cm (max. 1.9 cm)
+for the counter-movement jumps and 0.6 (max. 2.1 cm) for the plyometric jumps.},
+booktitle = {Proceedings of the 2015 Workshop on Wearable Systems and Applications},
+pages = {15–20},
+numpages = {6},
+keywords = {counter-movement jump, jump analysis, inertial measurement unit, wearable devices},
+location = {Florence, Italy},
+series = {WearSys '15}
+}
+@inproceedings{10.1145/3274783.3274854,
+author = {Truong, Hoang and Zhang, Shuo and Muncuk, Ufuk and Nguyen, Phuc and Bui, Nam and Nguyen, Anh and Lv, Qin and Chowdhury, Kaushik and Dinh, Thang and Vu, Tam},
+title = {CapBand: Battery-Free Successive Capacitance Sensing Wristband for Hand Gesture Recognition},
+year = {2018},
+isbn = {9781450359528},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/3274783.3274854},
+doi = {10.1145/3274783.3274854},
+abstract = {We present CapBand, a battery-free hand gesture recognition wearable in the form of
+a wristband. The key challenges in creating such a system are (1) to sense useful
+hand gestures at ultra-low power so that the device can be powered by the limited
+energy harvestable from the surrounding environment and (2) to make the system work
+reliably without requiring training every time a user puts on the wristband. We present
+successive capacitance sensing, an ultra-low power sensing technique, to capture small
+skin deformations due to muscle and tendon movements on the user's wrist, which corresponds
+to specific groups of wrist muscles representing the gestures being performed. We
+build a wrist muscles-to-gesture model, based on which we develop a hand gesture classification
+method using both motion and static features. To eliminate the need for per-usage
+training, we propose a kernel-based on-wrist localization technique to detect the
+CapBand's position on the user's wrist. We prototype CapBand with a custom-designed
+capacitance sensor array on two flexible circuits driven by a custom-built electronic
+board, a heterogeneous material-made, deformable silicone band, and a custom-built
+energy harvesting and management module. Evaluations on 20 subjects show 95.0% accuracy
+of gesture recognition when recognizing 15 different hand gestures and 95.3% accuracy
+of on-wrist localization.},
+booktitle = {Proceedings of the 16th ACM Conference on Embedded Networked Sensor Systems},
+pages = {54–67},
+numpages = {14},
+keywords = {wristband, battery-free, capacitance sensing},
+location = {Shenzhen, China},
+series = {SenSys '18}
+}
+@inproceedings{10.1145/3267242.3267253,
+author = {Schiboni, Giovanni and Amft, Oliver},
+title = {Sparse Natural Gesture Spotting in Free Living to Monitor Drinking with Wrist-Worn Inertial Sensors},
+year = {2018},
+isbn = {9781450359672},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/3267242.3267253},
+doi = {10.1145/3267242.3267253},
+abstract = {We present a spotting network composed of Gaussian Mixture Hidden Markov Models (GMM-HMMs)
+to detect sparse natural gestures in free living. The key technical features of our
+approach are (1) a method to mine non-gesture patterns that deals with the arbitrary
+data (Null Class), and (2) an optimisation based on multipopulation genetic programming
+to approximate spotting network's parameters across target and non-target models.
+We evaluate our GMM-HMMs spotting network in a novel free living dataset, including
+totally 35 days of annotated inertial sensor's recordings from seven participants.
+Drinking was chosen as target gesture. Our method reached an average F1-score of over
+74% and clearly outperformed an HMM-based threshold model approach. The results suggest
+that our spotting network approach is viable for sparse natural pattern spotting.},
+booktitle = {Proceedings of the 2018 ACM International Symposium on Wearable Computers},
+pages = {140–147},
+numpages = {8},
+keywords = {wearable devices, automatic dietary monitoring},
+location = {Singapore, Singapore},
+series = {ISWC '18}
+}
+@inproceedings{10.1145/3384657.3384801,
+author = {Li, Richard and Lee, Juyoung and Woo, Woontack and Starner, Thad},
+title = {KissGlass: Greeting Gesture Recognition Using Smart Glasses},
+year = {2020},
+isbn = {9781450376037},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/3384657.3384801},
+doi = {10.1145/3384657.3384801},
+abstract = {Cheek kissing is a common greeting in many countries around the world. Many parameters
+are involved when performing the kiss, such as which side to begin the kiss on and
+how many times the kiss is performed. These parameters can be used to infer one's
+social and physical context. In this paper, we present KissGlass, a system that leverages
+off-the-shelf smart glasses to recognize different kinds of cheek kissing gestures.
+Using a dataset we collected with 5 participants performing 10 gestures, our system
+obtains 83.0% accuracy in 10-fold cross validation and 74.33% accuracy in a leave-one-user-out
+user independent evaluation.},
+booktitle = {Proceedings of the Augmented Humans International Conference},
+articleno = {17},
+numpages = {5},
+keywords = {gesture recognition, greeting gestures, smart eyewear, smart glasses},
+location = {Kaiserslautern, Germany},
+series = {AHs '20}
+}
+@inproceedings{10.1145/2638728.2638795,
+author = {Ishimaru, Shoya and Kunze, Kai and Uema, Yuji and Kise, Koichi and Inami, Masahiko and Tanaka, Katsuma},
+title = {Smarter Eyewear: Using Commercial EOG Glasses for Activity Recognition},
+year = {2014},
+isbn = {9781450330473},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/2638728.2638795},
+doi = {10.1145/2638728.2638795},
+abstract = {Smart eyewear computing is a relatively new subcategory in ubiquitous computing research,
+which has enormous potential. In this paper we present a first evaluation of soon
+commercially available Electrooculography (EOG) glasses (J!NS MEME) for the use in
+activity recognition. We discuss the potential of EOG glasses and other smart eye-wear.
+Afterwards, we show a first signal level assessment of MEME, and present a classification
+task using the glasses. We are able to distinguish of 4 activities for 2 users (typing,
+reading, eating and talking) using the sensor data (EOG and acceleration) from the
+glasses with an accuracy of 70 % for 6 sec. windows and up to 100 % for a 1 minute
+majority decision. The classification is done user-independent.The results encourage
+us to further explore the EOG glasses as platform for more complex, real-life activity
+recognition systems.},
+booktitle = {Proceedings of the 2014 ACM International Joint Conference on Pervasive and Ubiquitous Computing: Adjunct Publication},
+pages = {239–242},
+numpages = {4},
+keywords = {smart glasses, activity recognition, eye movement analysis, electrooculography},
+location = {Seattle, Washington},
+series = {UbiComp '14 Adjunct}
+}
+@inbook{10.1145/1520340.1520468,
+author = {Bulling, Andreas and Roggen, Daniel and Tr\"{o}ster, Gerhard},
+title = {Wearable EOG Goggles: Eye-Based Interaction in Everyday Environments},
+year = {2009},
+isbn = {9781605582474},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/1520340.1520468},
+abstract = {In this paper, we present an embedded eye tracker for context-awareness and eye-based
+human-computer interaction - the wearable EOG goggles. In contrast to common systems
+using video, this unobtrusive device relies on Electrooculography (EOG). It consists
+of goggles with dry electrodes integrated into the frame and a small pocket-worn component
+with a powerful microcontroller for EOG signal processing. Using this lightweight
+system, sequences of eye movements, so-called eye gestures, can be efficiently recognised
+from EOG signals in real-time for HCI purposes. The device is self-contained solution
+and allows for seamless eye motion sensing, context-recognition and eye-based interaction
+in everyday environments.},
+booktitle = {CHI '09 Extended Abstracts on Human Factors in Computing Systems},
+pages = {3259–3264},
+numpages = {6}
+}
+@inproceedings{10.5555/2788890.2788938,
+author = {Jota, Ricardo and Wigdor, Daniel},
+title = {Palpebrae Superioris: Exploring the Design Space of Eyelid Gestures},
+year = {2015},
+isbn = {9780994786807},
+publisher = {Canadian Information Processing Society},
+address = {CAN},
+abstract = {In this paper, we explore the design space of eyelid gestures. We first present a
+framework for the design space based on the anatomy of the eye, human perception,
+and complexity of the eyelid gesture. Based on the framework we propose an algorithm
+to detect eyelid gestures with commodity cameras, already existing in laptops and
+mobile devices. We then populate the design space by demonstrating prototypes based
+on 3 form factors: mobile devices, desktop, and horizontal surfaces. These prototypes
+demonstrate the breadth of eyelid gestures as an input modality. We follow the scenarios
+with a discussion of how eyelid gestures can contribute to an interactive environment,
+and conclude with a discussion on insights, design recommendations, and limitations
+of the technique.},
+booktitle = {Proceedings of the 41st Graphics Interface Conference},
+pages = {273–280},
+numpages = {8},
+keywords = {eyelid gestures},
+location = {Halifax, Nova Scotia, Canada},
+series = {GI '15}
+}
+@inproceedings{10.1145/2935334.2935389,
+author = {Ashbrook, Daniel and Tejada, Carlos and Mehta, Dhwanit and Jiminez, Anthony and Muralitharam, Goudam and Gajendra, Sangeeta and Tallents, Ross},
+title = {Bitey: An Exploration of Tooth Click Gestures for Hands-Free User Interface Control},
+year = {2016},
+isbn = {9781450344081},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/2935334.2935389},
+doi = {10.1145/2935334.2935389},
+abstract = {We present Bitey, a subtle, wearable device for enabling input via tooth clicks. Based
+on a bone-conduction microphone worn just above the ears, Bitey recognizes the click
+sounds from up to five different pairs of teeth, allowing fully hands-free interface
+control. We explore the space of tooth input and show that Bitey allows for a high
+degree of accuracy in distinguishing between different tooth clicks, with up to 94%
+accuracy under laboratory conditions for five different tooth pairs. Finally, we illustrate
+Bitey's potential through two demonstration applications: a list navigation and selection
+interface and a keyboard input method.},
+booktitle = {Proceedings of the 18th International Conference on Human-Computer Interaction with Mobile Devices and Services},
+pages = {158–169},
+numpages = {12},
+keywords = {bio-acoustics, audio interfaces, tooth input, subtle interfaces, wearable computing, gestures},
+location = {Florence, Italy},
+series = {MobileHCI '16}
+}
+@inproceedings{10.1145/2468356.2468592,
+author = {Lissermann, Roman and Huber, Jochen and Hadjakos, Aristotelis and M\"{u}hlh\"{a}user, Max},
+title = {EarPut: Augmenting behind-the-Ear Devices for Ear-Based Interaction},
+year = {2013},
+isbn = {9781450319522},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/2468356.2468592},
+doi = {10.1145/2468356.2468592},
+abstract = {In this work-in-progress paper, we make a case for leveraging the unique affordances
+of the human ear for eyes-free, mobile interaction. We present EarPut, a novel interface
+concept, which instruments the ear as an interactive surface for touch-based interactions
+and its prototypical hardware implementation. The central idea behind EarPut is to
+go beyond prior work by unobtrusively augmenting a variety of accessories that are
+worn behind the ear, such as headsets or glasses. Results from a controlled experiment
+with 27 participants provide empirical evidence that people are able to target salient
+regions on their ear effectively and precisely. Moreover, we contribute a first, systematically
+derived interaction design space for ear-based interaction and a set of exemplary
+applications.},
+booktitle = {CHI '13 Extended Abstracts on Human Factors in Computing Systems},
+pages = {1323–1328},
+numpages = {6},
+keywords = {ear-based interaction, multi-touch, eyes-free, experiment, device augmentation, touch, mobile interaction},
+location = {Paris, France},
+series = {CHI EA '13}
+}
+@inproceedings{10.1145/2556288.2556984,
+author = {Serrano, Marcos and Ens, Barrett M. and Irani, Pourang P.},
+title = {Exploring the Use of Hand-to-Face Input for Interacting with Head-Worn Displays},
+year = {2014},
+isbn = {9781450324731},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/2556288.2556984},
+doi = {10.1145/2556288.2556984},
+abstract = {We propose the use of Hand-to-Face input, a method to interact with head-worn displays
+(HWDs) that involves contact with the face. We explore Hand-to-Face interaction to
+find suitable techniques for common mobile tasks. We evaluate this form of interaction
+with document navigation tasks and examine its social acceptability. In a first study,
+users identify the cheek and forehead as predominant areas for interaction and agree
+on gestures for tasks involving continuous input, such as document navigation. These
+results guide the design of several Hand-to-Face navigation techniques and reveal
+that gestures performed on the cheek are more efficient and less tiring than interactions
+directly on the HWD. Initial results on the social acceptability of Hand-to-Face input
+allow us to further refine our design choices, and reveal unforeseen results: some
+gestures are considered culturally inappropriate and gender plays a role in selection
+of specific Hand-to-Face interactions. From our overall results, we provide a set
+of guidelines for developing effective Hand-to-Face interaction techniques.},
+booktitle = {Proceedings of the SIGCHI Conference on Human Factors in Computing Systems},
+pages = {3181–3190},
+numpages = {10},
+keywords = {hwd, input techniques, hmd, body interaction, head-worn display, mobile interfaces},
+location = {Toronto, Ontario, Canada},
+series = {CHI '14}
+}
+@inproceedings{10.1145/2493988.2494329,
+author = {Manabe, Hiroyuki and Fukumoto, Masaaki and Yagi, Tohru},
+title = {Conductive Rubber Electrodes for Earphone-Based Eye Gesture Input Interface},
+year = {2013},
+isbn = {9781450321273},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/2493988.2494329},
+doi = {10.1145/2493988.2494329},
+abstract = {An eartip made of conductive rubber that also realizes bio-potential electrodes is
+proposed for a daily-use earphone-based eye gesture input interface. Several prototypes,
+each with three electrodes to capture Electrooculogram (EOG), are implemented on earphones
+and examined. Experiments with one subject over a 10 day period reveal that all prototypes
+capture EOG similarly but they differ as regards stability of the baseline and the
+presence of motion artifacts. Another experiment conducted on a simple eye-controlled
+application with six subjects shows that the proposed prototype minimizes motion artifacts
+and offers good performance. We conclude that conductive rubber with mixed Ag filler
+is the most suitable setup for daily-use.},
+booktitle = {Proceedings of the 2013 International Symposium on Wearable Computers},
+pages = {33–40},
+numpages = {8},
+keywords = {conductive rubber, earphone, electrode, eog, eye gesture},
+location = {Zurich, Switzerland},
+series = {ISWC '13}
+}
 @inproceedings{10.1145/3174910.3174953,
 author = {Lee, Juyoung and Yeo, Hui-Shyong and Starner, Thad and Quigley, Aaron and Kunze, Kai and Woo, Woontack},
 title = {Automated Data Gathering and Training Tool for Personalized "Itchy Nose"},
