@@ -57,37 +57,56 @@ Smartglasses with EOG sensors: J!ns Meme by J!ns (website currently only in Japa
 
 % Assigned to FB
 \section{Related Work}
-[Insert an introduction here]
+Our work touches on multiple areas of research, including wearable sensing, gesture recognition,
+and subtle interaction.
 
 \subsection{Face Interaction}
 Detecting finger tapping on the body using acoustic sensing \cite{10.1145/1753326.1753394}.
 Optical tracking system with infrared markers on fingers \cite{10.1145/2556288.2556984}.
 Exploring touch interaction by placing electrodes around the ear \cite{10.1145/2468356.2468592}.
-Exploring tooth click gestures \cite{10.1145/2935334.2935389}.
 Eyelid gestures \cite{10.5555/2788890.2788938}.
 Finger sensing IMUs \cite{10.1145/2858036.2858466}.
 Hand sensing IMUs \cite{10.1145/2984511.2984582}.
 Gesture recognition using wrist band \cite{10.1145/3274783.3274854}.
-Tracking tongue movements with touch sensors \cite{10.1145/3311823.3311831}.
-\subsection{Applications for Wearable Sensing}
+% Applications for Wearable Sensing
 Tracking eating episodes \cite{10.1145/3130902}.
 Sensors in shoes for tracking exercises \cite{10.1145/3174910.3174938}.
 Using hand gestures to control TV with wrist band \cite{10.1145/2641248.2641359}.
 Jump performance analysis \cite{10.1145/2753509.2753512}.
 Monitoring drinking with wrist-worn inertial sensors \cite{10.1145/3267242.3267253}.
+
 \subsection{EOG Sensing and Subtle Interaction}
-EOG attached to over-ear head phones \cite{10.1145/1125451.1125655}.
-EOG attached to in-ear head phones \cite{10.1145/2493988.2494329}.
-Demonstration of EOG sensors for eye-tracking \cite{10.1145/1520340.1520468}.
-Commercial EOG glasses for activity recognition, passively \cite{10.1145/2638728.2638795}.
-KissGlass for passively sensing context, not for deliberate subtle interactions \cite{10.1145/3384657.3384801}.
-Defining subtlety \cite{10.1145/3290605.3300648}. 
-Itchy Nose \cite{10.1145/3123021.3123060}.
-% Should this one even be in the Related Work category or just mentioned in Analysis?
-Itchy Nose tool for automating personalization \cite{10.1145/3174910.3174953}.
+While the aforementioned work utilized mainly IMUs, touch sensors or optical systems,
+Electrooculography (EOG) has become a useful tool for eye-tracking in recent years, too. 
+In 2006, Manabe et al. attached EOG sensors to over-ear \cite{10.1145/1125451.1125655}
+and in 2013, to in-ear head phones \cite{10.1145/2493988.2494329} to detect eye gestures.
+Bulling et al. first demonstrated efficient real-time eye-movement recognition
+with EOG goggles in 2009, which they custom-made \cite{10.1145/1520340.1520468}.
+Once commercial EOG glasses became available in 2014, Ichimaru et al. used them for
+activity recognition \cite{10.1145/2638728.2638795}. They used the J!ns Meme
+smartglasses to distinguish between typing, reading, eating and talking.
+As for more recent work, Li et al. used the J!ns Meme to infer the physical and social
+context of the wearer by recognizing various greeting gestures involving kissing
+\cite{10.1145/3384657.3384801}.
+
+In contrast to the work discussed, we focused on subtle interaction. Pohl et al. define
+four types of subtle interaction: (1) signifying feedback that is non-intrusive to the
+user, (2) hiding interaction from others and potentially deceiving them, (3) employing
+less effort for input and generally doing less, and (4) nudging users
+\cite{10.1145/3290605.3300648}. Our work aims at type (2) social subtlety, like e.g.
+Ashbrook et al. did with their tooth-click gesture recognition interface
+\cite{10.1145/2935334.2935389}. With a similar goal, Li et al. developed TongueBoard,
+a retainer form-factor device for recognizing silent speech \cite{10.1145/3311823.3311831}.
+
+The paper \textit{Itchy Nose} by Lee et al. is the most closely related work to ours,
+as it inspired our efforts \cite{10.1145/3123021.3123060}. They used the J!ns Meme
+smartglasses to detect multiple gestures that consisted of rubbing or pushing their
+noses, which can also be detected by the glasses' EOG sensors.
 
 % Assigned to FB
 \section{Analysis}
+Explaining the J!ns Meme.
+
 What was our workflow?
 
 Which gestures did we choose?
@@ -95,6 +114,7 @@ Which gestures did we choose?
 How does the J!ns Meme work and how do we use it?
 
 What data do we collect, how and why?
+Itchy Nose tool for automating personalization \cite{10.1145/3174910.3174953}.
 
 % Assigned to TB
 \section{Implementation}
