@@ -53,27 +53,52 @@ Subsequent paragraphs, however, are indented.
 % As a reference, maybe useful later
 Current smartglasses:
 Smartglasses with cameras: Spectacles by Snap Inc. https://www.spectacles.com/
-Smartglasses with EOG sensors: J!ns Meme by J!ns (website currently only in Japanese): https://jins-meme.com/
+Smartglasses with EOG sensors: J!ns Meme by J!ns (website currently only in Japanese):
+https://jins-meme.com/
 
 % Assigned to FB
 \section{Related Work}
-Our work touches on multiple areas of research, including wearable sensing, gesture recognition,
-and subtle interaction.
+Our work touches on multiple areas of research, including wearable sensing, gesture
+recognition, and subtle interaction. In the following section we roughly outline
+previous works in these areas.
 
-\subsection{Face Interaction}
-Detecting finger tapping on the body using acoustic sensing \cite{10.1145/1753326.1753394}.
-Optical tracking system with infrared markers on fingers \cite{10.1145/2556288.2556984}.
-Exploring touch interaction by placing electrodes around the ear \cite{10.1145/2468356.2468592}.
-Eyelid gestures \cite{10.5555/2788890.2788938}.
-Finger sensing IMUs \cite{10.1145/2858036.2858466}.
-Hand sensing IMUs \cite{10.1145/2984511.2984582}.
-Gesture recognition using wrist band \cite{10.1145/3274783.3274854}.
-% Applications for Wearable Sensing
-Tracking eating episodes \cite{10.1145/3130902}.
-Sensors in shoes for tracking exercises \cite{10.1145/3174910.3174938}.
-Using hand gestures to control TV with wrist band \cite{10.1145/2641248.2641359}.
-Jump performance analysis \cite{10.1145/2753509.2753512}.
-Monitoring drinking with wrist-worn inertial sensors \cite{10.1145/3267242.3267253}.
+\subsection{The Human Body as an Input Interface}
+There are various works discussing the use of the human body as an input interface, with
+most of them having an exploratory nature:
+Harrison et al. resolved the location of finger tapping on the user's arm and hand
+using acoustic sensing \cite{10.1145/1753326.1753394}.
+Serrano et al. explored Hand-to-Face input by tracking infrared markers applied to
+fingers with an optical system \cite{10.1145/2556288.2556984}.
+Lisserman et al. proposed the human ear as an input surface, which can be used by
+touching it in certain ways. This was achieved by placing electrodes around the ear
+\cite{10.1145/2468356.2468592}.
+Even eyelid gestures have been looked into by Jota et al., who developed a framework
+and prototypes for them \cite{10.5555/2788890.2788938}.
+Using a battery-free low-power wrist band, Truong et al. managed to classify hand
+gestures by detecting skin deformations \cite{10.1145/3274783.3274854}.
+
+Especially when using extremities as input methods, inertial measurement units (IMUs),
+which consist of accelerometers and gyroscopes, have been widely employed: Wen et al.
+used them to recognize unremarkable fine-motor finger movements
+\cite{10.1145/2858036.2858466}. Laput et al. utilized the IMUs in commercially available
+smartwatches with a custom performance-boosting kernel to classify a wide variety of hand
+gestures \cite{10.1145/2984511.2984582}.
+
+As for applications of wearable sensing, there are many from convenient user input
+to medical monitoring:
+Ike et al. demonstrated using hand gestures to control a TV's content navigation interface
+with a IMU-equipped wrist band \cite{10.1145/2641248.2641359}.
+Ohnishi et al. used sensors in shoes to track exercises and general posture
+\cite{10.1145/3174910.3174938}.
+Schiboni et al. monitored drinking with wrist-worn inertial sensors, demonstrating
+the feasibility of long-term sparse natural gesture recognition
+\cite{10.1145/3267242.3267253}.
+On the more medical side, Milosevic et al. performed jump performance analysis with
+low-cost wearable devices instead of pressure-sensitive force plates, with the intent
+of making training progress monitoring more easily available \cite{10.1145/2753509.2753512}.
+Again for automatic monitoring, Bedri et al. used wearable sensors to track
+eating episodes instead of making patients rely on often biased self-written food intake
+journals \cite{10.1145/3130902}.
 
 \subsection{EOG Sensing and Subtle Interaction}
 While the aforementioned work utilized mainly IMUs, touch sensors or optical systems,
@@ -89,7 +114,8 @@ As for more recent work, Li et al. used the J!ns Meme to infer the physical and 
 context of the wearer by recognizing various greeting gestures involving kissing
 \cite{10.1145/3384657.3384801}.
 
-In contrast to the work discussed, we focused on subtle interaction. Pohl et al. define
+In contrast to the work discussed, which often employed noticable or obviously unusual
+hardware, we explicitly focus on subtle interaction. Pohl et al. define
 four types of subtle interaction: (1) signifying feedback that is non-intrusive to the
 user, (2) hiding interaction from others and potentially deceiving them, (3) employing
 less effort for input and generally doing less, and (4) nudging users
@@ -98,7 +124,7 @@ Ashbrook et al. did with their tooth-click gesture recognition interface
 \cite{10.1145/2935334.2935389}. With a similar goal, Li et al. developed TongueBoard,
 a retainer form-factor device for recognizing silent speech \cite{10.1145/3311823.3311831}.
 
-The paper \textit{Itchy Nose} by Lee et al. is the most closely related work to ours,
+Itchy Nose by Lee et al. is the most closely related work to ours,
 as it inspired our efforts \cite{10.1145/3123021.3123060}. They used the J!ns Meme
 smartglasses to detect multiple gestures that consisted of rubbing or pushing their
 noses, which can also be detected by the glasses' EOG sensors.
