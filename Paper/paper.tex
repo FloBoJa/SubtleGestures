@@ -202,6 +202,82 @@ Itchy Nose tool for automating personalization \cite{10.1145/3174910.3174953}.
 
 % Assigned to TB
 \section{Implementation}
+
+The following sections give a detailed description of our implementation process. In total we implemented four programs during our research concerning the J1ns meme glasses. In the first step we implemented a data collection tool that supported our test subjects during the collection and labeling process. As already described in our analysis section, we then decided to implement a neural network based on an LSTM architecture. After that we created a third program that uses several other machine learning techniques to predict the correct gestures by using the data from the J1ns meme. This was a necessary step to show that our new LSTM-based architecture is able to perform just as well or even outperform other already established machine learning techniques in this gesture prediction task. The last step of our implementation process was a program that uses real time data from the J1ns meme glasses to predict the gestures that a user performs.
+
+\subsection{Data collection tool}
+
+The prediction of gesture classes by using the J!ns meme data is a supervised classification task. This means that a large amount of labeled data is needed to train our LSTM-based neural network and the other machine learning techniques. One of our goals of this project was the creation of a neural network that achieves good results in the gesture prediction task regardless of which person is currently using the J1ns meme glasses. To achieve this goal, it was necessary for us to select a diverse group of people that each collect a part of our training data. In total we selected ? (noch einfügen) people for the collection task.
+\par
+In order to create useful data for the machine learning techniques, you first have to collect the gesture data and afterwards assign them the correct label. We unified this process by creating a data collection tool that automatically assigns the correct label to the data after each gesture that the test subject performs.
+\begin{center}
+\begin{figure}
+\centerline{\includegraphics[scale=0.5]{Language_Selection.png}}
+\caption{The language selection page of our data collection tool}
+\label{fig:gesturestart}
+\end{figure}
+\end{center}
+Figure \ref{fig:gesturestart} shows how the data collection tool lets the user choose a preferred language which is either german or english before the data collection starts. This language selection process is followed by a description of the experiment, which informs the user about what kind of data is collected and how the user is supposed to collect this data. These initial steps supply the user with all the important information that is needed to ensure a clean data collection process.
+\par
+After the initial steps the data collection process can start. We use a JSON file to configure which gestures the tool collects data for. Figure \ref{fig:gesturejson} shows an entry for the gesture PUSH\_GLASSES\_UP in the JSON file. For every gesture we define a name and description that is available in either english or german. The "sampleCount" specifies the amount of data samples our tool will collect for the defined gesture. We decided that 10 samples for each gesture is a good compromise between the time that is needed to finish the collection process and the amount of data that we receive for our task. The "label" is just the label that our tool assigns to the data samples of this gesture. This label is later used for our supervised classification task. The "file" entry is the name of an .mp4 file that shows an example of how this gesture is supposed to be performed. This type of configuration allows us to freely define any kind of gesture that the test subjects need to collect.
+\begin{center}
+\begin{figure}
+\centerline{\includegraphics[width=\textwidth]{GestureJSON.png}}
+\caption{A gesture defined in the JSON file of the data collection tool}
+\label{fig:gesturejson}
+\end{figure}
+\end{center}
+
+Figure \ref{fig:gesturedatacollection} shows how our tool asks a the user to collect data for a gesture. It shows a description of the gesture, how many samples of this type of gesture still need to be collected and a video that shows an exemplary execution of this type of gesture. As soon as the user is ready to perform this gesture, he can press the start button. In the next step the user needs to perform the described gesture. After he is finished the user needs to press the stop button. In the background our data collection tool saves the time when the start and when the stop button were pressed. This time interval is combined with the label that needs to be assigned to the data that was collect during this time. The triples of [label, start time, end time] allow us to automatically label the data that is collected from the J1ns meme during the collection process. The procedure gets repeated until every gesture that is defined in the JSON file has reached its defined sample count.
+\begin{center}
+\begin{figure}
+\centerline{\includegraphics[scale=0.3]{Gesture_Description.png}}
+\caption{The tool asks the test subject to collect data for a gesture}
+\label{fig:gesturedatacollection}
+\end{figure}
+\end{center}
+
+After a test subject finished the collection process, we extract the file with the data that was collected from the J!ns meme glasses. We created a script that uses the triples of [label, start time, end time] of our data collection tool to separate the collected data into files that only contain the data of a single gesture. After this step we are left with a fully labeled gesture dataset that can be used to train the different machine learning architectures.
+
+\subsection{The LSTM-based neural network}
+
+As already described in the analysis section of this paper we decided to use an LSTM-based architecture for our neural network because every gesture that is performed while wearing the J!ns meme glasses creates a stream of data. LSTM's use recurrent connections in their hidden states which allows them to remember information from previous timesteps which is ideal for our use case.
+\par
+For our implementation we made use of the pytorch library. The library consists of many already implemented features that are needed for the deep learning process. We especially made use of the pytorch LSTM implementation. To train our neural network we shuffled our automatically labeled gesture dataset and split it into three parts. We used 60\% of the data as our training dataset. Another 20\% was then used as our validation dataset that we used to tune our hyperparameters. The last 20\% was then used as a test dataset to see how good our network performs on unseen data.
+\begin{center}
+\begin{figure}
+\includegraphics[width=\textwidth]{LSTM_Architecture.png}
+\caption{The architecture of our LSTM-based neural network}
+\label{fig:lstmarchitecture}
+\end{figure}
+\end{center}
+Figure \ref{fig:lstmarchitecture} shows the complete architecture of our LSTM-based neural network.
+\paragraph{Input layer}
+Our input layers consists of the raw data stream of the J!ns meme glasses. During the training of the network the input has a shape of (64, x, 11). The first dimension is the batch size that we used during our training. We tested several different numbers and concluded that 64 was a good compromise between training time and performance. The second dimension is the sequence length of our input. Every gesture that is performed by a person is always unique which also means that the time, that is needed to perform a gesture is always different. That also means that the sequence length of a gesture is always a variable number. This is no problem in our use case because we decided to use an LSTM as the base of our neural network and they are especially made for sequences with variable length. The third dimension of the input is the feature count. In every timestep the J1ns meme produces a data vector that contains 11 features.
+\paragraph{LSTM layer}
+The input is then fed into an LSTM layer. This LSTM consists of 512 hidden states. We also tried several different hidden sizes for the LSTM and 512 was a good compromise between performance and training time. Small hidden sizes like 64 proved to be too small to completely learn our training data set while large hidden sizes like 1024 took too long to train. In our LSTM layer we used the built in dropout function of the pytorch library. We chose to use the standard dropout rate of 0.5 to prevent overfitting
+\paragraph{Layer normalization}
+The output of the LSTM layer is then put into a Layer normalization layer. This layer normalizes the LSTM output across the feature dimensions. This allows us to use higher learning rates, makes the network less dependent on weight initialization and introduces some noise to prevent overfitting.
+\paragraph{Linear layers}
+In the last step of our network we need to classify the output of our LSTM. For this task we use several stacked linear layers. Each linear layer gets progressively smaller until we reach the last layer that maps from a size of 64 to a size of 11 which is the amount of gestures that we trained our network for. Each layer except for the last one uses the Exponential Linear Unit acitvation function. The last layer uses the Softmax activation function which outputs pseudo probabilities for each of our gestures. During the test time the gesture that has the maximum probability gets assigned to the input. Between each linear layer we also used a dropout of 25\% to prevent our network from overfitting.
+
+\subsection{Other machine learning techniques}
+
+To be able to compare the performance of our LSTM-based neural network we implemented several other state of the art machine learning techniques and trained them with our dataset. To implement those machine learning techniques we made use of the scikit-learn python library. In total we implemented a Random Forest Classifier, a Decision Tree, a Naive Bayes Classifier, a Support Vector Machine and a K-Nearest Neighbor Classifier. The scikit-learn library already gave us access to standard implementations of those classifiers. These implementations all use a certain "fit()" function that automatically trains the classifier on a given dataset. One challenge that arose during the implementation of these classifiers was the preparation of the training dataset. While our LSTM-based neural network can easily deal with sequences of variable length, the other classifiers aren't naturally able to process them. If we look at our data then we can see that every gesture consists of several timesteps that each contain 11 feature values. We transformed each data sequence of a gesture into a large vector that has 11 x sequence length entries. We then padded every vector in the dataset with zeros in order for them to have the same length as the longest vector. These modifications allowed us to train the other classifiers with a dataset that consists of data sequences.
+
+\subsection{Live gesture classification tool}
+
+The final goal of our implementation was a tool that allows the live classification of gestures that are performed by a person wearing the J1ns meme glasses. Creating such a tool opens up the possibilities for applications that use these gestures to execute different types of commands. In order to gain access to the real time data that the J1ns meme glasses produce during their usage we use a built in function of the J1ns MEME Data Logger. This function writes the data to a specified IP-Adress and Port which allows us to write a tool that accesses the data on this port in real time.
+
+\begin{center}
+\begin{figure}
+\includegraphics[width=\textwidth]{Live_Classification_IP.png}
+\caption{The IP-address and port specification page}
+\label{fig:ipandport}
+\end{figure}
+\end{center}
+
+Figure \ref{fig:ipandport} shows the first page of our Live gesture classification tool. Here the user needs to specify the IP-address and the port that was specified in the J1ns MEME Data Logger. After the user presses the connect button the tool opens a new page where the live classification can start. We use the same procedure that we already used during our data collection process. To start the classification process the user has to press a start button. The tool then automatically records the time of this button press. Then the user performs the gesture. Afterwards he presses the stop button. The time for this button press is also automatically recorded by the tool. Now the tool tries to classify the gesture by first extracting the relevant parts of the data. This is achieved by using the time frame between the start and stop button presses. The extracted data is then fed into our trained neural network. The tool then selects the gesture that is assigned the maximum probability by our neural network and puts out the name of the gesture on the screen.
 \subsection{A Subsection Sample}
 Please note that the first paragraph of a section or subsection is
 not indented. The first paragraph that follows a table, figure,
