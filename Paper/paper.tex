@@ -131,16 +131,63 @@ noses, which can also be detected by the glasses' EOG sensors.
 
 % Assigned to FB
 \section{Analysis}
+% TODO introduction for analysis section
+What does our research contribute? (Additional subtle gestures, ...)
+
+% TODO, maybe do this in the Introduction section? ~FB
 Explaining the J!ns Meme.
 
-What was our workflow?
+% TODO
+What was our goal?
 
-Which gestures did we choose?
+\subsection{Workflow}
+We began with planning the rough outline that our research would follow.
+The plan was as follows:
+* Gather gesture ideas
+* Check ideas for detectable responses
+* Create tools to automate the recording of gestures
+* Collect labelled data with the tools
+* Model, train and validate a neural network until its performance is sufficient
+* Test the network on our withheld test dataset
 
+[Insert figure here]
+
+\subsection{Gestures}
+% TODO, maybe use self-made illustrations here
+In the first phase, we came up with gestures we considered subtle. Early candidates were:
+* Pushing your glasses up your nose [see GIF]
+* A thinking pose, where you touch your chin with your thumb and your cheek with your
+index finger [see GIF]
+* Slow nodding [see GIF]
+* Tapping the frame of the glasses [see GIF]
+
+Since some of the gestures generated barely any responses on the EOG or the IMU readouts
+[see figures with an example of a strong and a weak response],
+we continued coming up with gestures until we had a total of seven gestures.
+The gestures we came up with and their apparent responses can be seen in the following
+table:
+
+Pushing glasses up the nose | strong
+Readjusting glasses | strong
+Thinking pose | weak
+Slow nodding | strong
+Tilting head sideways | strong
+Stroking mustache | weak
+Biting lip | weak
+Tapping on the nose | strong
+Rubbing the nose | strong
+Pushing cheek up with a finger | strong
+Tapping the glasses | strong
+
+\subsection{Tools for Recording and Labelling}
+% is this something for the implementation section? ~FB
 How does the J!ns Meme work and how do we use it?
 
 What data do we collect, how and why?
 Itchy Nose tool for automating personalization \cite{10.1145/3174910.3174953}.
+
+\subsection{Neural Network Architecture and Training}
+% again - how much of this belongs to implementation? ~FB
 
 % Assigned to TB
 \section{Implementation}
