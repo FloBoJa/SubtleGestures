@@ -137,8 +137,6 @@ What does our research contribute? (Additional subtle gestures, ...)
 % TODO, maybe do this in the Introduction section? ~FB
 Explaining the J!ns Meme.
 
-% TODO
-What was our goal?
 
 \subsection{Workflow}
 We began with planning the rough outline that our research would follow.
@@ -167,38 +165,77 @@ In the first phase, we came up with gestures we considered subtle. Early candida
 
 Since some of the gestures generated barely any responses on the EOG or the IMU readouts
 [see figures with an example of a strong and a weak response],
-we continued coming up with gestures until we had a total of seven gestures.
-The gestures we came up with and their apparent responses can be seen in table \ref{responses}.
+we continued coming up with gestures until we had a total of seven (eleven, if left and
+right variants are differentiated) presumably recognizable gestures.
+The gestures we came up with and their apparent responses can be seen in table
+\ref{tab:responses}.
 
 \begin{table}
-\caption{The quality of the EOG and IMU sensor responses for our gestures.}\label{responses}
+\caption{The quality of the EOG and IMU sensor responses for our gestures. Gestures 
+        with (L/R) at the end have both a left and a right variant.}\label{tab:responses}
 \begin{tabular}{|l|l|}
     \hline
     Gesture description & Response quality\\
     \hline
     Pushing glasses up the nose & strong\\
-    Readjusting glasses & strong\\
+    Readjusting glasses (L/R)& strong\\
     Thinking pose & weak\\
     Slow nodding & strong\\
-    Tilting head sideways & strong\\
+    Tilting head sideways (L/R)& strong\\
     Stroking mustache & weak\\
     Biting lip & weak\\
-    Tapping on the nose & strong\\
+    Tapping on the nose (L/R)& strong\\
     Rubbing the nose & strong\\
-    Pushing cheek up with a finger & strong\\
-    Tapping the glasses & strong\\\hline
+    Pushing cheek up with a finger (L/R)& strong\\
+    Tapping the glasses (L/R)& strong\\\hline
 \end{tabular}
 \end{table}
 
 \subsection{Tools for Recording and Labelling}
-% is this something for the implementation section? ~FB
-How does the J!ns Meme work and how do we use it?
+% TODO include the links via BibTeX
+To use the J!ns Meme, we first had to interface with it. The interface would have to allow
+both recording and streaming the data from the smartglasses, perferrably.
+The J!ns Meme's sensor data can be read either via an iOS, Android or macOS app
+or via a Windows app, with the latter requiring a custom bluetooth dongle. For
+initial gesture evaluation we used the Android app, but since we set out to have
+live classification with the potential to control your computer, and only Windows
+machines were available, we chose the Windows app J!ns Meme DataLogger
+[https://github.com/jins-meme/ES\_R-DataLogger-for-Windows]. A development kit was
+available for Android, macOS and Windows as well
+[https://github.com/jins-meme/ES\_R-Development-Kit], but it did not eliminate the
+need for the bluetooth dongle on Windows and only implied a bigger overhead for us,
+since the DataLogger can both record and forward the J!ns Meme's sensor data to a
+file and a TCP port, respectively.
 
-What data do we collect, how and why?
-Itchy Nose tool for automating personalization \cite{10.1145/3174910.3174953}.
+%TODO check correctness, this is from memory alone
+The J!ns Meme DataLogger supplies eleven values per cycle, three of which are the
+accelerometers' data and the remaining eight being processed EOG data.
+Notably, we observed that we had different values available via the Android app
+[https://github.com/jins-meme/ES_R-DataLogger-for-Android]. Namely
+there were gyroscope values, albeit they were constantly zero, and less EOG data fields.
+We found this behavior to be the same on all J!ns Meme smartglasses and Android phones
+we had available, but are not certain if it is intended behavior.
+
+Since we wanted our neural network to have the most possible data, we simply included all
+eleven values that the DataLogger on Windows provided into our data collection.
+
+The next step after the data collection would have been the labelling of the recorded data.
+But with our goal being at least hundreds of samples, manual labelling seemed impractical.
+Therefore, we developed a tool that would firstly present our test subjects the
+gestures they would have to perform and secondly ask them to press a button to
+automatically document the start and end of their gesture. This allowed us to split the
+file that the DataLogger would create into multiple files, taking the included time
+stamps as a reference.
 
 \subsection{Neural Network Architecture and Training}
-% again - how much of this belongs to implementation? ~FB
+For the classification task of telling the gestures apart from each other, we decided on
+a long short-term memory (LSTM) neural network. LSTM neural networks, contrary to convolutional neural networks
+or multilayer perceptrons, allow for the input data to have different lengths. This
+implies that we do not need to add padding to our data samples to bring them all to the
+same length. Also, the data we use as input for the network is sequential and a time
+series. Recurrent neural networks such as LSTMs can remember what data they were supplied
+in the last time steps by having backward edges in their hidden layers, making them
+usually a good fit for sequential data.
 
 % Assigned to TB
 \section{Implementation}
