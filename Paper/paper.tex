@@ -114,7 +114,7 @@ As for more recent work, Li et al. used the J!ns Meme to infer the physical and 
 context of the wearer by recognizing various greeting gestures involving kissing
 \cite{10.1145/3384657.3384801}.
 
-In contrast to the work discussed, which often employed noticable or obviously unusual
+In contrast to the work discussed, which often employed noticeable or obviously unusual
 hardware, we explicitly focus on subtle interaction. Pohl et al. define
 four types of subtle interaction: (1) signifying feedback that is non-intrusive to the
 user, (2) hiding interaction from others and potentially deceiving them, (3) employing
@@ -171,6 +171,7 @@ The gestures we came up with and their apparent responses can be seen in table
 \ref{tab:responses}.
 
 \begin{table}
+\centering
 \caption{The quality of the EOG and IMU sensor responses for our gestures. Gestures 
         with (L/R) at the end have both a left and a right variant.}\label{tab:responses}
 \begin{tabular}{|l|l|}
@@ -227,7 +228,7 @@ automatically document the start and end of their gesture. This allowed us to sp
 file that the DataLogger would create into multiple files, taking the included time
 stamps as a reference.
 
-\subsection{Neural Network Architecture and Training}
+\subsection{Neural Network Architecture and Training} \label{subsec:nnArchAndTraining}
 For the classification task of telling the gestures apart from each other, we decided on
 a long short-term memory (LSTM) neural network. LSTM neural networks, contrary to convolutional neural networks
 or multilayer perceptrons, allow for the input data to have different lengths. This
@@ -236,6 +237,7 @@ same length. Also, the data we use as input for the network is sequential and a 
 series. Recurrent neural networks such as LSTMs can remember what data they were supplied
 in the last time steps by having backward edges in their hidden layers, making them
 usually a good fit for sequential data.
+%TODO: elaborate why the other models from our baseline are probably less suited than LSTMs
 
 % Assigned to TB
 \section{Implementation}
@@ -247,33 +249,28 @@ The following sections give a detailed description of our implementation process
 The prediction of gesture classes by using the J!ns meme data is a supervised classification task. This means that a large amount of labeled data is needed to train our LSTM-based neural network and the other machine learning techniques. One of our goals of this project was the creation of a neural network that achieves good results in the gesture prediction task regardless of which person is currently using the J1ns meme glasses. To achieve this goal, it was necessary for us to select a diverse group of people that each collect a part of our training data. In total we selected ? (noch einfügen) people for the collection task.
 \par
 In order to create useful data for the machine learning techniques, you first have to collect the gesture data and afterwards assign them the correct label. We unified this process by creating a data collection tool that automatically assigns the correct label to the data after each gesture that the test subject performs.
-\begin{center}
 \begin{figure}
+\centering
 \centerline{\includegraphics[scale=0.5]{Language_Selection.png}}
 \caption{The language selection page of our data collection tool}
 \label{fig:gesturestart}
 \end{figure}
-\end{center}
 Figure \ref{fig:gesturestart} shows how the data collection tool lets the user choose a preferred language which is either german or english before the data collection starts. This language selection process is followed by a description of the experiment, which informs the user about what kind of data is collected and how the user is supposed to collect this data. These initial steps supply the user with all the important information that is needed to ensure a clean data collection process.
 \par
 After the initial steps the data collection process can start. We use a JSON file to configure which gestures the tool collects data for. Figure \ref{fig:gesturejson} shows an entry for the gesture PUSH\_GLASSES\_UP in the JSON file. For every gesture we define a name and description that is available in either english or german. The "sampleCount" specifies the amount of data samples our tool will collect for the defined gesture. We decided that 10 samples for each gesture is a good compromise between the time that is needed to finish the collection process and the amount of data that we receive for our task. The "label" is just the label that our tool assigns to the data samples of this gesture. This label is later used for our supervised classification task. The "file" entry is the name of an .mp4 file that shows an example of how this gesture is supposed to be performed. This type of configuration allows us to freely define any kind of gesture that the test subjects need to collect.
-\begin{center}
 \begin{figure}
+\centering
 \centerline{\includegraphics[width=\textwidth]{GestureJSON.png}}
 \caption{A gesture defined in the JSON file of the data collection tool}
 \label{fig:gesturejson}
 \end{figure}
-\end{center}
-
 Figure \ref{fig:gesturedatacollection} shows how our tool asks a the user to collect data for a gesture. It shows a description of the gesture, how many samples of this type of gesture still need to be collected and a video that shows an exemplary execution of this type of gesture. As soon as the user is ready to perform this gesture, he can press the start button. In the next step the user needs to perform the described gesture. After he is finished the user needs to press the stop button. In the background our data collection tool saves the time when the start and when the stop button were pressed. This time interval is combined with the label that needs to be assigned to the data that was collect during this time. The triples of [label, start time, end time] allow us to automatically label the data that is collected from the J1ns meme during the collection process. The procedure gets repeated until every gesture that is defined in the JSON file has reached its defined sample count.
-\begin{center}
 \begin{figure}
+\centering
 \centerline{\includegraphics[scale=0.3]{Gesture_Description.png}}
 \caption{The tool asks the test subject to collect data for a gesture}
 \label{fig:gesturedatacollection}
 \end{figure}
-\end{center}
-
 After a test subject finished the collection process, we extract the file with the data that was collected from the J!ns meme glasses. We created a script that uses the triples of [label, start time, end time] of our data collection tool to separate the collected data into files that only contain the data of a single gesture. After this step we are left with a fully labeled gesture dataset that can be used to train the different machine learning architectures.
 
 \subsection{The LSTM-based neural network}
@@ -281,13 +278,12 @@ After a test subject finished the collection process, we extract the file with t
 As already described in the analysis section of this paper we decided to use an LSTM-based architecture for our neural network because every gesture that is performed while wearing the J!ns meme glasses creates a stream of data. LSTM's use recurrent connections in their hidden states which allows them to remember information from previous timesteps which is ideal for our use case.
 \par
 For our implementation we made use of the pytorch library. The library consists of many already implemented features that are needed for the deep learning process. We especially made use of the pytorch LSTM implementation. To train our neural network we shuffled our automatically labeled gesture dataset and split it into three parts. We used 60\% of the data as our training dataset. Another 20\% was then used as our validation dataset that we used to tune our hyperparameters. The last 20\% was then used as a test dataset to see how good our network performs on unseen data.
-\begin{center}
 \begin{figure}
+\centering
 \includegraphics[width=\textwidth]{LSTM_Architecture.png}
 \caption{The architecture of our LSTM-based neural network}
 \label{fig:lstmarchitecture}
 \end{figure}
-\end{center}
 Figure \ref{fig:lstmarchitecture} shows the complete architecture of our LSTM-based neural network.
 \paragraph{Input layer}
 Our input layers consists of the raw data stream of the J!ns meme glasses. During the training of the network the input has a shape of (64, x, 11). The first dimension is the batch size that we used during our training. We tested several different numbers and concluded that 64 was a good compromise between training time and performance. The second dimension is the sequence length of our input. Every gesture that is performed by a person is always unique which also means that the time, that is needed to perform a gesture is always different. That also means that the sequence length of a gesture is always a variable number. This is no problem in our use case because we decided to use an LSTM as the base of our neural network and they are especially made for sequences with variable length. The third dimension of the input is the feature count. In every timestep the J1ns meme produces a data vector that contains 11 features.
@@ -305,15 +301,12 @@ To be able to compare the performance of our LSTM-based neural network we implem
 \subsection{Live gesture classification tool}
 
 The final goal of our implementation was a tool that allows the live classification of gestures that are performed by a person wearing the J1ns meme glasses. Creating such a tool opens up the possibilities for applications that use these gestures to execute different types of commands. In order to gain access to the real time data that the J1ns meme glasses produce during their usage we use a built in function of the J1ns MEME Data Logger. This function writes the data to a specified IP-Adress and Port which allows us to write a tool that accesses the data on this port in real time.
-
-\begin{center}
 \begin{figure}
+\centering
 \includegraphics[width=\textwidth]{Live_Classification_IP.png}
 \caption{The IP-address and port specification page}
 \label{fig:ipandport}
 \end{figure}
-\end{center}
-
 Figure \ref{fig:ipandport} shows the first page of our Live gesture classification tool. Here the user needs to specify the IP-address and the port that was specified in the J1ns MEME Data Logger. After the user presses the connect button the tool opens a new page where the live classification can start. We use the same procedure that we already used during our data collection process. To start the classification process the user has to press a start button. The tool then automatically records the time of this button press. Then the user performs the gesture. Afterwards he presses the stop button. The time for this button press is also automatically recorded by the tool. Now the tool tries to classify the gesture by first extracting the relevant parts of the data. This is achieved by using the time frame between the start and stop button presses. The extracted data is then fed into our trained neural network. The tool then selects the gesture that is assigned the maximum probability by our neural network and puts out the name of the gesture on the screen.
 \subsection{A Subsection Sample}
 Please note that the first paragraph of a section or subsection is
@@ -324,29 +317,69 @@ Subsequent paragraphs, however, are indented.
 
 % Assinged to SA
 \section{Results}
-\subsection{A Subsection Sample}
-Please note that the first paragraph of a section or subsection is
-not indented. The first paragraph that follows a table, figure,
-equation etc. does not need an indent, either.
+\subsection{Baseline}
+When deciding on our architecture, we already theorized, that LSTMs should be the most suitable model, due to the time-dependent and time-continuous nature of our data (comp. Chapter \ref{subsec:nnArchAndTraining}). However, to allow for a better understanding and evaluation of the scores and our neural networks performance, we will now first set a baseline that all our results can be compared to. 
+\begin{table}
+\centering
+\caption{Test-Accuracy of popular classification models not chosen in our architecture.}\label{tab:baselineTable}
+\begin{tabular}{|l|l|}
+    \hline
+    Model & Accuracy\\
+    \hline
+    Random Guess & 9.1\%\\
+    Naive Bayes & 14.0\%\\
+    K-Nearest-Neighbors & 22.7\%\\
+    Decision Tree & 35.5\%\\
+    Support Vector Machine & 38.0\%\\
+    Random Forest & 61.9\%\\
+    \hline
+\end{tabular}
+\end{table}
+% Check whether my formulation is scientific enough, or whether I am being too evaluative
+% TODO: insert formula
+Since we are micro averaging in a multi-class problem, the F1-score is synonymous to the accuracy value. [insert reference]
+As we have 11 gestures, just randomly guessing without any classification model yields an accuracy of 9.1\%. The Naive Bayes classifier surprisingly is not much better than guessing with an accuracy of 14.0\%. The simple K-Nearest-Neighbors (KNN) algorithm managed to achieve an accuracy of 22.7\%. Much to our surprise a single Decision Tree was able to score a 35.5\% accuracy, almost on par with the Support Vector Machine (SVM) that managed 38.0\%. Finally,as expected, the Random Forest classifier far outperforms all other (previously listed) models, boasting an accuracy of 61.9\%. All aforementioned accuracies are taken over the unseen test-set and therefore test-accuracies.
 
-Subsequent paragraphs, however, are indented.
+% TODO: Need a better subsection title
+\subsection{Achieved Accuracy}
+Compare the aforementioned accuracies (our Baseline, Table \ref{tab:baselineTable}) to the accuracy achieved by our LSTM model:
+ The validation accuracy with all 11 gestures included is at 71.9\%. When using the unseen test-set (test accuracy), our model achieved an accuracy of 73.6\%. 
+ 
+ Upon analysing our results, we noticed, that some gestures are very hard to distinguish for our neural network. The confusion matrices showed, that nose gestures are easily confounded with each other. This is illustrated in Figure \ref{fig:confMat}, showing the confusion matrix of our LSTM with and without the nose gestures. 
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{confusionMatrices.png}
+\caption{The confusion matrices with nose gestures (right) and without nose gestures (left).}
+\label{fig:confMat}
+\end{figure}
+ Moreover, upon removing some gestures iteratively, we further noticed, that the nose gestures also had a negative influence on the classification of non-nose gestures. Upon removing these nose gestures, our validation and test accuracy shot up to 84.1\% and 83.5\% respectively, underlining our findings. With accuracies of over 71\% over all gestures and over 83\% over all non-nose gestures, this performance lead us to the conclusion that LSTMs are the right choice for our data set and the given problem statement. %gerne letzten satz verbessern, falls noch bessere formulierung einfällt
 
-% Assigned to TB
+\subsection{Real-Time-Classifier}
+Our trained neural network is just the foundation for the actual use-case: a real-time-classifier (RTC) for gestures executed wearing smart glasses such as the J!NS MEME. For our RTC we tried multiple approaches to record the user data.
+
+We first started with a continuous classification, where all data is directly fed to the RTC. However, as the data was very noisy, it resulted in many false positives and inaccurate classification. We then built a button that would allow one to evaluate the last gesture executed. This was implemented using a predefined, fixed time-frame to determine the start of the gesture. But also this approach proved to be too inaccurate due to varying positions of gestures in time-frames. Our final and current version uses a start-and-stop button, analogous to the recording procedure. This not only provides an intuitive and simple operation of the classifier, but by using this approach we were also able to achieve an accuracy of over 70\%.
+
+% Assigned to SA
 \section{Discussion}
 \subsection{A Subsection Sample}
-Please note that the first paragraph of a section or subsection is
-not indented. The first paragraph that follows a table, figure,
-equation etc. does not need an indent, either.
+Our goal was to determine whether or not we could provide new gestures that we then could classify reliably. We hope to provide a bigger foundation and spark new interest for further research towards gesture classification using smart glasses, that had once started with the Itchy Nose paper. [insert reference]
 
-Subsequent paragraphs, however, are indented.
+This also means that our focus was on training a network that recognises gestures well and implementing a real-time classifier that could take advantage of this. In the process, the interactivity of the real-time classifier has taken a back seat, which can be observed in our start-and-stop-button based implementation. Naturally, this is not a model that can be readily used with smart glasses in a "hands-free and subtle" way.
+
+Moreover, due to the local Covid-19 situation and time restrictions we could only use a sample of convenience with 10 participants, including ourselves. In other words, our data set was very small. In addition, as we iteratively integrated the participants' data, we saw vast improvements in our accuracy for each participant we added, further underlining the need for more data. We believe that by expanding the data set and increasing the number of participants, an accuracy of over 95\% can definitely be achieved.
+
+Parenthetically, to use the glasses while standing or walking (as has been tested in the Itchy Nose paper [insert reference]), the neural network would have to be retrained using new data suited for this purpose.
+
+Overall our results suggest that we can differentiate the proposed gestures very well. Since gestures would most likely be used to subtly and naturally select from options presented on a suitable UI, 11 gestures (but also the XX non-nose gestures) should be more than sufficient.
 
 \section{Future Work}
 \subsection{A Subsection Sample}
-Please note that the first paragraph of a section or subsection is
-not indented. The first paragraph that follows a table, figure,
-equation etc. does not need an indent, either.
+- for the proper use of the smart glasses and gestures, future research should focus on training and improving the realtime-classifier
+   - should use continuous classification to allow for originally intended use (subtle gesture in certain social scenarios...)
+- improve our classificator by further adding participants/ expand data set
+- could retrain NN to also use glasses while standing or walking
 
-Subsequent paragraphs, however, are indented.
+
 
 \section{First Section}
 \subsection{A Subsection Sample}
@@ -365,6 +398,7 @@ The contribution should contain no more than four levels of
 headings. Table~\ref{tab1} gives a summary of all heading levels.
 
 \begin{table}
+\centering
 \caption{Table captions should be placed above the
 tables.}\label{tab1}
 \begin{tabular}{|l|l|l|}
