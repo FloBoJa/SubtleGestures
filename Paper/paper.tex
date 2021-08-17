@@ -131,16 +131,24 @@ noses, which can also be detected by the glasses' EOG sensors.
 
 % Assigned to FB
 \section{Analysis}
-% TODO introduction for analysis section
-What does our research contribute? (Additional subtle gestures, ...)
-
-% TODO, maybe do this in the Introduction section? ~FB
-Explaining the J!ns Meme.
-
+While there is quite a bit of research about the J!ns Meme and its applications, there
+seemed to be room for more gestures to be scientifically explored, especially for the
+purpose of subtle interaction. Therefore we set out to experiment with various
+gestures to find out how well the J!ns Meme captured them. Our method of detection and
+classification was an artificial neural network (ANN). ANNs have proven themselves as
+a reliable way of classifying data, be it static data like images or text or sequential
+data like audio recordings or sensor readouts.
 
 \subsection{Workflow}
+\begin{figure}
+\centering
+\centerline{\includegraphics[scale=0.8]{workflow.pdf}}
+\caption{The workflow of this project}
+\label{fig:workflow}
+\end{figure}
+
 We began with planning the rough outline that our research would follow.
-The plan was as follows:
+The plan was as seen in Figure \ref{fig:workflow}:
 \begin{itemize}
     \item Gather gesture ideas
     \item Check ideas for detectable responses
@@ -149,8 +157,6 @@ The plan was as follows:
     \item Model, train and validate a neural network until its performance is sufficient
     \item Test the network on our withheld test dataset
 \end{itemize}
-
-[Insert figure here]
 
 \subsection{Gestures}
 % TODO, maybe use self-made illustrations here
@@ -179,21 +185,20 @@ The gestures we came up with and their apparent responses can be seen in table
     Gesture description & Response quality\\
     \hline
     Pushing glasses up the nose & strong\\
-    Readjusting glasses (L/R)& strong\\
+    Readjusting glasses (L/R) & strong\\
     Thinking pose & weak\\
     Slow nodding & strong\\
-    Tilting head sideways (L/R)& strong\\
+    Tilting head sideways (L/R) & strong\\
     Stroking mustache & weak\\
     Biting lip & weak\\
     Tapping on the nose (L/R)& strong\\
     Rubbing the nose & strong\\
-    Pushing cheek up with a finger (L/R)& strong\\
-    Tapping the glasses (L/R)& strong\\\hline
+    Pushing cheek up with a finger (L/R) & strong\\
+    Tapping the glasses (L/R) & strong\\\hline
 \end{tabular}
 \end{table}
 
 \subsection{Tools for Recording and Labelling}
-% TODO include the links via BibTeX
 To use the J!ns Meme, we first had to interface with it. The interface would have to allow
 both recording and streaming the data from the smartglasses, perferrably.
 The J!ns Meme's sensor data can be read either via an iOS, Android or macOS app
@@ -209,10 +214,10 @@ file and a TCP port, respectively.
 
 %TODO check correctness, this is from memory alone
 The J!ns Meme DataLogger supplies eleven values per cycle, three of which are the
-accelerometers' data and the remaining eight being processed EOG data.
+accelerometers' data and the remaining eight being at least partially processed EOG data.
 Notably, we observed that we had different values available via the Android app
 \cite{jinsMemeDataLoggerAndroid}. Namely there were gyroscope values, albeit they
-were constantly zero, and less EOG data fields.
+were constantly zero, and less EOG values per time step.
 We found this behavior to be the same on all J!ns Meme smartglasses and Android phones
 we had available, but are not certain if it is intended behavior.
 
