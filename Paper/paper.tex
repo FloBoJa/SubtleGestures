@@ -201,9 +201,8 @@ or via a Windows app, with the latter requiring a custom bluetooth dongle. For
 initial gesture evaluation we used the Android app, but since we set out to have
 live classification with the potential to control your computer, and only Windows
 machines were available, we chose the Windows app J!ns Meme DataLogger
-[https://github.com/jins-meme/ES\_R-DataLogger-for-Windows]. A development kit was
-available for Android, macOS and Windows as well
-[https://github.com/jins-meme/ES\_R-Development-Kit], but it did not eliminate the
+\cite{jinsMemeDataLoggerWin}. A software development kit is available for Android, macOS
+and Windows as well \cite{jinsMemeSDK}, but it did not eliminate the
 need for the bluetooth dongle on Windows and only implied a bigger overhead for us,
 since the DataLogger can both record and forward the J!ns Meme's sensor data to a
 file and a TCP port, respectively.
@@ -212,8 +211,8 @@ file and a TCP port, respectively.
 The J!ns Meme DataLogger supplies eleven values per cycle, three of which are the
 accelerometers' data and the remaining eight being processed EOG data.
 Notably, we observed that we had different values available via the Android app
-[https://github.com/jins-meme/ES\_R-DataLogger-for-Android]. Namely
-there were gyroscope values, albeit they were constantly zero, and less EOG data fields.
+\cite{jinsMemeDataLoggerAndroid}. Namely there were gyroscope values, albeit they
+were constantly zero, and less EOG data fields.
 We found this behavior to be the same on all J!ns Meme smartglasses and Android phones
 we had available, but are not certain if it is intended behavior.
 
