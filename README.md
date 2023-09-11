@@ -1,6 +1,6 @@
 # SubtleGestures
 
-SubtleGestures is a project exploring gesture recognition using EOG and IMU sensors on J!ns Meme smartglasses. This repository contains the implemented code, as well as our paper in which you can find our in-depth analysis, and results of our research project.
+SubtleGestures is a project exploring gesture recognition using smartglasses. In this project, we used on J!ns Meme smartglasses with EOG and IMU sensors. This repository contains the implemented code, as well as our paper in which you can find our in-depth analysis, and results of our research project.
 
 ## Overview
 
